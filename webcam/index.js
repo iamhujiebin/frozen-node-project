@@ -10,7 +10,13 @@ var http = require('http').createServer(app);
 
 // const https = require('https').createServer(sslOptions, app);
 
-var io = require('socket.io')(http);
+// var io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    cors: {
+        origin: "*",
+        allowedHeaders: ["Access-Control-Allow-Origin"],
+    }
+});
 io.on('connect', (socket) => {
     console.log('a user connected: ', socket.id);
     socket.on('disconnect', () => {

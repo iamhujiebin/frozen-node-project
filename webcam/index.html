@@ -13,11 +13,11 @@
         </form>
     </ul>
 </body>
-<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
-<script src="//cdn.bootcdn.net/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
 <script>
     $(document).ready(function () {
-        var socket = io('//');
+        var socket = io('http://127.0.0.1:4443');
         console.log('hello ', socket);
         socket.on('connect', () => {
             console.log('conncet ' + socket.id);
