@@ -6,7 +6,7 @@ const ChatList = Vue.component("chat-list", {
         return {
             todo: "",
         }
-    }
+    },
 })
 
 export default ChatList;

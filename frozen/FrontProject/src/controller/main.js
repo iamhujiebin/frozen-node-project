@@ -11,8 +11,18 @@ const Main = Vue.component("main", {
     },
 
     mounted() {
+        this._socket = io();
         this._remoteStream = new MediaStream();
         this.$refs.remote_preview.srcObject = this._remoteStream;
+        this.addSocketListeners();
+    },
+
+    methods: {
+        addSocketListeners() {
+            this._socket.on("msg", e => {
+                console.log(e)
+            })
+        }
     }
 })
 
