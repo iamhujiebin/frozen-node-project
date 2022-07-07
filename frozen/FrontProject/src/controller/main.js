@@ -14,14 +14,15 @@ const Main = Vue.component("main", {
         this._socket = io();
         this._remoteStream = new MediaStream();
         this.$refs.remote_preview.srcObject = this._remoteStream;
+        this.$refs.chat_list.setIO(this._socket);
         this.addSocketListeners();
     },
 
     methods: {
         addSocketListeners() {
-            this._socket.on("msg", e => {
-                console.log(e)
-            })
+            // this._socket.on("msg", e => {
+            //     console.log(e)
+            // })
         }
     }
 })

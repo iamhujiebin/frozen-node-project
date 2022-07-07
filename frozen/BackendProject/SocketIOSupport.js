@@ -7,6 +7,7 @@ function configSocketIO(server) {
         console.log("socket: ", socket.id)
         io.emit("msg", socket.id)
         socket.on("msg", msg => {
+            console.log("recv msg ", msg)
             io.emit("msg", msg);
         })
     })
