@@ -3,11 +3,10 @@
         教师: {{classroomName}}
     </div>
     <div style="display: flex; flex-direction:row;">
-        <client-list ref="client_list"></client-list>
         <button @click="videoSwitch">视频开关</button>
         <button @click="displaySwitch">屏幕开关</button>
         <video class="display_preview" style="display: block; width:840px" autoplay ref="display_preview"></video>
         <video style="display: block; width:360px" autoplay ref="remote_preview"></video>
     </div>
-    <chat-list ref="chat_list"></chat-list>
+    <client-list ref="client_list"></client-list>
 </div>

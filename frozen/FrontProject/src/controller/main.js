@@ -1,6 +1,5 @@
 import Tpl from "../views/main.html";
 import "../component/ClientList"
-import "../component/ChatList"
 import Context from "../context"
 
 const Main = Vue.component("main", {
@@ -26,7 +25,6 @@ const Main = Vue.component("main", {
         setContext(context) {
             this._context = context;
             this.$refs.client_list.setContext(context);
-            this.$refs.chat_list.setContext(context);
         },
 
         videoSwitch() {

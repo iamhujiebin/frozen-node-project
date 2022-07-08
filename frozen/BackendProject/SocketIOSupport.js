@@ -3,16 +3,20 @@ const SocketIOServer = require("socket.io");
 function configSocketIO(server) {
     let io = SocketIOServer(server);
 
-    function broadcastClientList() {
-        io.of("/").clients((err, clients) => {
-            if (!err) {
-                io.emit("listClients", clients)
-            }
-        })
+    async function broadcastClientList() {
+        const sockets = await io.of("/").fetchSockets();
+        let socketIds = [];
+        for (const socket of sockets) {
+            console.log(socket.id);
+            socketIds.push(socket.id)
+        }
+        console.log("sockets ", socketIds);
+        io.emit("listClients", socketIds);
     }
 
     io.on("connection", socket => {
         console.log("socket: ", socket.id)
+        broadcastClientList();
 
         socket.on("msg", data => {
             console.log("recv msg ", data)
