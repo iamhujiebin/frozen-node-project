@@ -1,35 +1,35 @@
 import Tpl from "../views/main.html";
 import "../component/ClientList"
 import "../component/ChatList"
+import Context from "../context"
 
 const Main = Vue.component("main", {
     template: Tpl,
     data() {
         return {
-            classroomName: "Frozen"
+            classroomName: "Frozen",
         }
     },
 
     mounted() {
         this.initRemoteStream();
         this.initDisplayStream();
-        this.initSocketIO();
     },
 
     methods: {
-        initSocketIO() {
-            this._socket = io();
-            this.$refs.chat_list.setIO(this._socket);
-            this.addSocketListeners();
+        /**
+         * 
+         * @param {Context} context 
+         */
+        setContext(context) {
+            this._context = context;
+            this.$refs.client_list.setContext(context);
+            this.$refs.chat_list.setContext(context);
         },
-        addSocketListeners() {
-            // this._socket.on("msg", e => {
-            //     console.log(e)
-            // })
-        },
+
         async initRemoteStream() {
             // this._remoteStream = new MediaStream();
-            this._remoteStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            this._remoteStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             this.$refs.remote_preview.srcObject = this._remoteStream;
         },
         async initDisplayStream() {

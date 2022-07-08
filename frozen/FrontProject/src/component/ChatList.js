@@ -1,4 +1,5 @@
 import Tpl from "./ChatList.html"
+import Context from "../context";
 
 const ChatList = Vue.component("chat-list", {
     template: Tpl,
@@ -13,20 +14,29 @@ const ChatList = Vue.component("chat-list", {
     },
 
     methods: {
-        setIO(io) {
-            // console.log("set io ", io)
-            this._io = io;
+        /**
+         * 
+         * @param {Context} context 
+         */
+        setContext(context) {
+            this._context = context;
             this.addSocketListeners();
         },
         sendMsg() {
-            // console.log("msg ", this.msg);
-            this._io.emit("msg", this.msg);
+            /**
+             * @type {Context}
+             */
+            let context = this._context;
+            context._socketio.sendMsg(this.msg, "todo TargetSocketId")
             this.msg = '';
         },
         addSocketListeners() {
-            this._io.on("msg", e => {
-                // console.log("recevie ", e);
-                this.ta += e + "\n";
+            /**
+             * @type {Context}
+             */
+            let context = this._context;
+            context._socketio._socket.on("msg", msg => {
+                this.ta += msg.msg + "\n";
             })
         }
     },
