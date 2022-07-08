@@ -8,12 +8,14 @@ const Main = Vue.component("main", {
     data() {
         return {
             classroomName: "Frozen",
+            remoteFirst: false,
+            displayFirst: false,
         }
     },
 
     mounted() {
-        this.initRemoteStream();
-        this.initDisplayStream();
+        // this.initRemoteStream();
+        // this.initDisplayStream();
     },
 
     methods: {
@@ -27,6 +29,20 @@ const Main = Vue.component("main", {
             this.$refs.chat_list.setContext(context);
         },
 
+        videoSwitch() {
+            if (!this.remoteFirst) {
+                this.remoteFirst = true
+                this.initRemoteStream();
+            }
+        },
+
+        displaySwitch() {
+            if (!this.displayFirst) {
+                this.displayFirst = true
+                this.initDisplayStream();
+            }
+        },
+
         async initRemoteStream() {
             // this._remoteStream = new MediaStream();
             this._remoteStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
@@ -36,11 +52,6 @@ const Main = Vue.component("main", {
             this._displayStream = await navigator.mediaDevices.getDisplayMedia();
             this.$refs.display_preview.srcObject = this._displayStream;
             this._recorder = new MediaRecorder(this._displayStream, { mimeType: "video/webm;codesc=h264" });
-            this._recorder.ondataavailable = this.recorder_dataAvailableHandler.bind(this);
-        },
-        recorder_dataAvailableHandler(e) {
-            console.log(e);
-            this.currentWebmData = e.data;
         },
     }
 })
