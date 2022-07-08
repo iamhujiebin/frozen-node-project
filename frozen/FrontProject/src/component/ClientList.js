@@ -8,6 +8,7 @@ const ClientList = Vue.component("client-list", {
         return {
             clients: ["结冰", "梦茵"],
             currentSocketId: "",
+            selectSocketId: "",
             msg: "",
             ta: "",
         };
@@ -24,7 +25,7 @@ const ClientList = Vue.component("client-list", {
          */
         setContext(context) {
             this._context = context;
-            this.currentSocketId = context._socketio._socket.id;
+            this.currentSocketId = context._socketio.socketId;
             this.addSocketListeners();
         },
         sendMsg() {
@@ -32,7 +33,8 @@ const ClientList = Vue.component("client-list", {
              * @type {Context}
              */
             let context = this._context;
-            context._socketio.sendMsg(this.msg, "todo TargetSocketId")
+            context._socketio.sendMsg(this.msg, this.selectSocketId);
+            this.ta += "我说:" + this.msg + "\n";
             this.msg = '';
         },
         addSocketListeners() {
@@ -41,18 +43,21 @@ const ClientList = Vue.component("client-list", {
              */
             let context = this._context;
             context._socketio._socket.on("msg", msg => {
-                this.ta += msg.msg + "\n";
+                this.ta += "TA说:" + msg.msg + "\n";
             })
             context._socketio._socket.on("listClients", clients => {
                 this.setClients(clients);
             })
         },
         targetSocketIDClicked(e) {
-            let selectSocketId = $(e.target).data("socket_id");
-            console.log("targetSocketIDClicked:", selectSocketId)
+            this.selectSocketId = $(e.target).data("socket_id");
+            console.log("targetSocketIDClicked:", this.selectSocketId)
         },
         getSocketIdLabel(socketId) {
-            if (socketId != this.currentSocketId) {
+            if (!this._context) {
+                return
+            }
+            if (socketId != this._context._socketio.socketId) {
                 return socketId
             } else {
                 return socketId + "[自己]";

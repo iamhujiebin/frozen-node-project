@@ -22,7 +22,6 @@ function configSocketIO(server) {
             console.log("recv msg ", data)
             if (data.receiver && data.msg) {
                 io.to(data.receiver).emit("msg", data); // 指定receiver
-                socket.emit("msg", data); // 原封不动发回去
             }
         });
 

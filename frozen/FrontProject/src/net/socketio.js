@@ -7,6 +7,7 @@ class SocketIO {
      */
     constructor(context) {
         this._context = context;
+        this._socketId = "";
         this._socket = io(); // 路径可以做成配置的
         this._socket.on("listClients", clients => {
             // todo
@@ -14,10 +15,13 @@ class SocketIO {
         this._socket.on("msg", data => {
             console.log("多个io.on,可以触发多次", data.msg)
         });
+        this._socket.on("connect", () => {
+            this._socketId = this._socket.id;
+        });
     }
 
     get socketId() {
-        return this._socket.id;
+        return this._socketId;
     }
 
     sendMsg(msg, targetSocketId) {
