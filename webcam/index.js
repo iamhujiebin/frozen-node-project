@@ -1,14 +1,14 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
-var http = require('http').createServer(app);
 
-// let sslOptions = {
-// key: fs.readFileSync('./privkey.key'),//里面的文件替换成你生成的私钥
-// cert: fs.readFileSync('./cacert.pem')//里面的文件替换成你生成的证书
-// };
+let sslOptions = {
+    key: fs.readFileSync('./privkey.key'),//里面的文件替换成你生成的私钥
+    cert: fs.readFileSync('./cacert.pem')//里面的文件替换成你生成的证书
+};
 
-// const https = require('https').createServer(sslOptions, app);
+const http = require('https').createServer(sslOptions, app);
+// var http = require('http').createServer(app);
 
 // var io = require('socket.io')(http);
 const io = require('socket.io')(http, {
