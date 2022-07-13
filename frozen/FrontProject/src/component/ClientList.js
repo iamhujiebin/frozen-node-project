@@ -1,5 +1,6 @@
 import Context from '../context';
 import Tpl from './ClientList.html';
+import Events from '../events/Events';
 
 const ClientList = Vue.component("client-list", {
     template: Tpl,
@@ -52,6 +53,11 @@ const ClientList = Vue.component("client-list", {
         targetSocketIDClicked(e) {
             this.selectSocketId = $(e.target).data("socket_id");
             console.log("targetSocketIDClicked:", this.selectSocketId)
+            /**
+            * @type {Context}
+            */
+            let context = this._context;
+            context.fire(Events.START_CHAT_SESSION, this.selectSocketId)
         },
         getSocketIdLabel(socketId) {
             if (!this._context) {

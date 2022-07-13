@@ -13,7 +13,7 @@ const Main = Vue.component("main", {
     },
 
     mounted() {
-        // this.initRemoteStream();
+        // this.initLocalStream();
         // this.initDisplayStream();
     },
 
@@ -22,16 +22,17 @@ const Main = Vue.component("main", {
          * 
          * @param {Context} context 
          */
-        setContext(context) {
+        async setContext(context) {
             this._context = context;
             this.$refs.client_list.setContext(context);
-        },
 
-        videoSwitch() {
-            if (!this.remoteFirst) {
-                this.remoteFirst = true
-                this.initRemoteStream();
-            }
+            let media = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            this.$refs.local_preview.srcObject = media;
+            context.setData(Context.KEY_LOCAL_MEDIA_STREAM, media);
+
+            let remoteStream = new MediaStream();
+            context.setData(Context.KEY_REMOTE_MEDIA_STREAM, remoteStream);
+            this.$refs.remote_preview.srcObject = remoteStream;
         },
 
         displaySwitch() {
@@ -41,11 +42,6 @@ const Main = Vue.component("main", {
             }
         },
 
-        async initRemoteStream() {
-            // this._remoteStream = new MediaStream();
-            this._remoteStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-            this.$refs.remote_preview.srcObject = this._remoteStream;
-        },
         async initDisplayStream() {
             this._displayStream = await navigator.mediaDevices.getDisplayMedia();
             this.$refs.display_preview.srcObject = this._displayStream;

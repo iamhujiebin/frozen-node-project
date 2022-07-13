@@ -2,9 +2,6 @@
     <div class="card-header">
         所有人
     </div>
-    <!-- <div v-for="c in clients" style="float: left;"> -->
-    <!-- {{c}} -->
-    <!-- </div> -->
     <div>
         <button @click="targetSocketIDClicked" class="btn btn-outline-dark btn-sm" v-for="c in clients"
             :data-socket_id="c">{{getSocketIdLabel(c)}}</button>
