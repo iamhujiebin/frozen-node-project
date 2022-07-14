@@ -7,7 +7,7 @@
             :data-socket_id="c">{{getSocketIdLabel(c)}}</button>
     </div>
     <div style="float: left;">
-        <textarea style="width: 100%;" rows="10" v-model="ta"></textarea>
+        <textarea style="width: 100%;" rows="10" v-model="ta" readonly></textarea>
         <form @submit.prevent="sendMsg">
             <input type="text" v-model="msg" required>
             <input type="submit" value="发送">

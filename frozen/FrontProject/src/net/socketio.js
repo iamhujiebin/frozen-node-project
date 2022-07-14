@@ -21,19 +21,15 @@ class SocketIO {
             this._socketId = this._socket.id;
         });
         this._socket.on(SocketEvents.OFFER, data => {
-            console.log("createOffer:", data)
             this._context.fire(Events.RECEIVED_OFFER, data)
         })
         this._socket.on(SocketEvents.ANSWER, data => {
-            console.log("receiveAnswer:", data)
             this._context.fire(Events.RECEIVED_ANSWER, data)
         })
         this._socket.on(SocketEvents.OFFER_ICE, data => {
-            console.log("receiveOfferIce:", data)
             this._context.fire(Events.RECEIVED_OFFER_ICE, data)
         })
         this._socket.on(SocketEvents.ANSWER_ICE, data => {
-            console.log("receiveAnswerIce:", data)
             this._context.fire(Events.RECEIVED_ANSWER_ICE, data)
         })
     }

@@ -34,12 +34,19 @@ class Context {
     }
 
     fire(type, data) {
-        console.log("Fire event:" + type);
         this._jqThis.trigger(type, [this, data]);
     }
 
     get socketIO() {
         return this._socketio;
+    }
+
+    setClientList(client) {
+        this._clientList = client
+    }
+
+    get clientList() {
+        return this._clientList;
     }
 }
 

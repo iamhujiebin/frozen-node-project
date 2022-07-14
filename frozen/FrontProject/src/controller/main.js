@@ -25,6 +25,7 @@ const Main = Vue.component("main", {
         async setContext(context) {
             this._context = context;
             this.$refs.client_list.setContext(context);
+            context.setClientList(this.$refs.client_list); // context包含clientList
 
             let media = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             this.$refs.local_preview.srcObject = media;

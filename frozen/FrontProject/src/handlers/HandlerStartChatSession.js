@@ -11,7 +11,6 @@ import Config from "../config"
 async function HandlerStartChatSession(e, context, data) {
     let offerPc = new RTCPeerConnection(Config.PC_INIT_CONFIG)
     console.log("offerPc:", offerPc)
-    console.log("context:", context)
     context.setData(Context.KEY_OFFER_PEER_CONNECTION, offerPc)
 
     offerPc.onicecandidate = e => {

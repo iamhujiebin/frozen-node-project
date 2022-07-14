@@ -45,6 +45,8 @@ async function HandlerReceivedOffer(e, context, data) {
     let answer = await answerPc.createAnswer()
     context.socketIO.emit(SocketEvents.ANSWER, { answer: answer, receiver: data.sender })
     await answerPc.setLocalDescription(new RTCSessionDescription(answer))
+
+    context.clientList.targetSocketIDClickHook(data.sender)
 }
 
 export default HandlerReceivedOffer

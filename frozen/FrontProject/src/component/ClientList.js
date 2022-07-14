@@ -12,6 +12,7 @@ const ClientList = Vue.component("client-list", {
             selectSocketId: "",
             msg: "",
             ta: "",
+            taMap: new Map() // {targetSocketId:$socketId,ta:$ta"}
         };
     },
 
@@ -35,8 +36,17 @@ const ClientList = Vue.component("client-list", {
              */
             let context = this._context;
             context._socketio.sendMsg(this.msg, this.selectSocketId);
-            this.ta += "我说:" + this.msg + "\n";
-            this.msg = '';
+            let session = this.taMap.get(this.selectSocketId)
+            if (!session) {
+                session = {
+                    "targetSocketId": this.selectSocketId,
+                    "ta": ""
+                }
+            }
+            session.ta += "我说:" + this.msg + "\n";
+            this.ta = session.ta
+            this.taMap.set(this.selectSocketId, session)
+            this.msg = ''
         },
         addSocketListeners() {
             /**
@@ -44,7 +54,16 @@ const ClientList = Vue.component("client-list", {
              */
             let context = this._context;
             context._socketio._socket.on("msg", msg => {
-                this.ta += "TA说:" + msg.msg + "\n";
+                let session = this.taMap.get(msg.sender)
+                if (!session) {
+                    session = {
+                        "targetSocketId": this.selectSocketId,
+                        "ta": ""
+                    }
+                }
+                session.ta += "TA说:" + msg.msg + "\n";
+                this.taMap.set(msg.sender, session)
+                this.ta = session.ta
             })
             context._socketio._socket.on("listClients", clients => {
                 this.setClients(clients);
@@ -52,12 +71,33 @@ const ClientList = Vue.component("client-list", {
         },
         targetSocketIDClicked(e) {
             this.selectSocketId = $(e.target).data("socket_id");
-            console.log("targetSocketIDClicked:", this.selectSocketId)
             /**
             * @type {Context}
             */
             let context = this._context;
             context.fire(Events.START_CHAT_SESSION, this.selectSocketId)
+
+            let session = this.taMap.get(this.selectSocketId)
+            if (!session) {
+                session = {
+                    "targetSocketId": this.selectSocketId,
+                    "ta": ""
+                }
+            }
+            this.ta = session.ta
+            this.taMap.set(this.selectSocketId, session)
+        },
+        targetSocketIDClickHook(socketId) {
+            this.selectSocketId = socketId
+            let session = this.taMap.get(socketId)
+            if (!session) {
+                session = {
+                    "targetSocketId": socketId,
+                    "ta": ""
+                }
+            }
+            this.ta = session.ta
+            this.$forceUpdate();
         },
         getSocketIdLabel(socketId) {
             if (!this._context) {
