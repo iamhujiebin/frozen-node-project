@@ -68,6 +68,12 @@ const ClientList = Vue.component("client-list", {
             } else {
                 return socketId + "[自己]";
             }
+        },
+        getStyle(socketId) {
+            if (socketId == this.selectSocketId) {
+                return "background-color: black; color: white;"
+            }
+            return ""
         }
     }
 });

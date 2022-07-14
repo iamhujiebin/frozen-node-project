@@ -3,7 +3,7 @@
         所有人
     </div>
     <div>
-        <button @click="targetSocketIDClicked" class="btn btn-outline-dark btn-sm" v-for="c in clients"
+        <button @click="targetSocketIDClicked" :style="getStyle(c)" class="btn btn-outline-dark" v-for="c in clients"
             :data-socket_id="c">{{getSocketIdLabel(c)}}</button>
     </div>
     <div style="float: left;">
