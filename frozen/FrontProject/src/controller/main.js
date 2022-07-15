@@ -29,11 +29,13 @@ const Main = Vue.component("main", {
 
             let media = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             this.$refs.local_preview.srcObject = media;
-            context.setData(Context.KEY_LOCAL_MEDIA_STREAM, media);
+            context.setLocalStream(media);
 
-            let remoteStream = new MediaStream();
-            context.setData(Context.KEY_REMOTE_MEDIA_STREAM, remoteStream);
-            this.$refs.remote_preview.srcObject = remoteStream;
+            context.setMainApp(this);
+
+            // let remoteStream = new MediaStream();
+            // context.setData(Context.KEY_REMOTE_MEDIA_STREAM, remoteStream);
+            // this.$refs.remote_preview.srcObject = remoteStream;
         },
 
         displaySwitch() {
@@ -48,6 +50,14 @@ const Main = Vue.component("main", {
             this.$refs.display_preview.srcObject = this._displayStream;
             this._recorder = new MediaRecorder(this._displayStream, { mimeType: "video/webm;codesc=h264" });
         },
+
+        setRemoteStream(receiverSocketId, media) {
+            this._context.setData(receiverSocketId, Context.KEY_REMOTE_MEDIA_STREAM, media);
+            this.$refs.remote_preview.srcObject = media;
+        },
+        getRemoteStream(receiverSocketId) {
+            return this._context.getData(receiverSocketId, Context.KEY_REMOTE_MEDIA_STREAM)
+        }
     }
 })
 

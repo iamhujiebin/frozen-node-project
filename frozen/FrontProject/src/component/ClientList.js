@@ -27,7 +27,7 @@ const ClientList = Vue.component("client-list", {
          */
         setContext(context) {
             this._context = context;
-            this.currentSocketId = context._socketio.socketId;
+            // this.currentSocketId = context.socketIO.socketId; // 这个时候不能设置自己的socketId,还没ready
             this.addSocketListeners();
         },
         sendMsg() {
@@ -66,11 +66,17 @@ const ClientList = Vue.component("client-list", {
                 this.ta = session.ta
             })
             context._socketio._socket.on("listClients", clients => {
+                console.log("currentSocketID:", context.socketIO.socketId)
+                this.currentSocketId = context.socketIO.socketId; // 这个时候能设置自己的socketId
                 this.setClients(clients);
             })
         },
         targetSocketIDClicked(e) {
             this.selectSocketId = $(e.target).data("socket_id");
+            if (this.selectSocketId == this.currentSocketId) {
+                console.log("选自己不需要建立webrtc连接")
+                return
+            }
             /**
             * @type {Context}
             */

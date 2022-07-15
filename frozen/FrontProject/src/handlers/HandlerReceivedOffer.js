@@ -13,16 +13,14 @@ async function HandlerReceivedOffer(e, context, data) {
     /**
      * @type {MediaStream}
      */
-    let localStream = context.getData(Context.KEY_LOCAL_MEDIA_STREAM);
+    let localStream = context.getLocalStream();
     localStream.getTracks().forEach(t => {
         answerPc.addTrack(t)
     })
-    context.setData(Context.KEY_ANSWER_PERR_CONNECTION, answerPc)
+    context.setData(data.sender, Context.KEY_ANSWER_PERR_CONNECTION, answerPc)
 
-    /**
-     * @type {MediaStream}
-     */
-    let remoteStream = context.getData(Context.KEY_REMOTE_MEDIA_STREAM)
+    let remoteStream = new MediaStream();
+    context.mainApp.setRemoteStream(data.sender, remoteStream)
     answerPc.ontrack = e => {
         remoteStream.addTrack(e.track)
     }
@@ -38,7 +36,7 @@ async function HandlerReceivedOffer(e, context, data) {
         dataChannel.onmessage = ev => {
             console.log(ev)
         }
-        context.setData(Context.KEY_DATA_CHANNEL, dataChannel)
+        context.setData(data.sender, Context.KEY_DATA_CHANNEL, dataChannel)
     }
 
     await answerPc.setRemoteDescription(new RTCSessionDescription(data.offer))

@@ -1,5 +1,6 @@
 import SocketIO from "./net/socketio";
 import Events from "./events/Events"
+import Main from "./controller/main";
 import HandlerReceivedOffer from "./handlers/HandlerReceivedOffer";
 import HandlerStartChatSession from "./handlers/HandlerStartChatSession"
 import HandlerReceivedAnswer from "./handlers/HandlerReceivedAnswer"
@@ -25,12 +26,30 @@ class Context {
         jqThis.on(Events.RECEIVED_ANSWER_ICE, HandlerReceivedAnswserICE)
     }
 
-    setData(k, v) {
-        this._shareData.set(k, v);
+    setData(receiverSocketId, k, v) {
+        let data = this._shareData.get(receiverSocketId)
+        if (!data) {
+            data = new Map()
+        }
+        data.set(k, v);
+        this._shareData.set(receiverSocketId, data)
     }
 
-    getData(k) {
-        return this._shareData.get(k);
+    getData(receiverSocketId, k) {
+        let data = this._shareData.get(receiverSocketId)
+        if (!data) {
+            data = new Map()
+            this._shareData.set(k, data)
+        }
+        return data.get(k);
+    }
+
+    setLocalStream(stream) {
+        this._localStream = stream;
+    }
+
+    getLocalStream() {
+        return this._localStream;
     }
 
     fire(type, data) {
@@ -47,6 +66,14 @@ class Context {
 
     get clientList() {
         return this._clientList;
+    }
+
+    setMainApp(mainApp) {
+        this._mainApp = mainApp;
+    }
+
+    get mainApp() {
+        return this._mainApp;
     }
 }
 

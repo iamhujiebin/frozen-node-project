@@ -10,7 +10,7 @@ async function HandlerReceivedOfferICE(e, context, data) {
     /**
      * @type {RTCPeerConnection}
      */
-    let answerPc = context.getData(Context.KEY_ANSWER_PERR_CONNECTION)
+    let answerPc = context.getData(data.sender, Context.KEY_ANSWER_PERR_CONNECTION)
     await answerPc.addIceCandidate(new RTCIceCandidate(data.ice))
 }
 
