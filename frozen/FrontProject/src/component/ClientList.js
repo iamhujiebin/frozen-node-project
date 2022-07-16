@@ -63,7 +63,9 @@ const ClientList = Vue.component("client-list", {
                 }
                 session.ta += "TA说:" + msg.msg + "\n";
                 this.taMap.set(msg.sender, session)
-                this.ta = session.ta
+                if (this.selectSocketId == msg.sender) {
+                    this.ta = session.ta
+                }
             })
             context._socketio._socket.on("listClients", clients => {
                 console.log("currentSocketID:", context.socketIO.socketId)

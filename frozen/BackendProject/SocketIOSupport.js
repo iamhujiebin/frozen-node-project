@@ -25,7 +25,10 @@ function configSocketIO(server) {
             }
         });
 
-        socket.on("disconnect", () => { });
+        socket.on("disconnect", (reason) => {
+            broadcastClientList();
+            console.log("disconnect", socket.id, reason)
+        });
 
         socket.on("offer", data => {
             let receiver = data.receiver;
