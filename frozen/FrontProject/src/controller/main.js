@@ -64,6 +64,39 @@ const Main = Vue.component("main", {
         },
         getRemoteStream(receiverSocketId) {
             return this._context.getData(receiverSocketId, Context.KEY_REMOTE_MEDIA_STREAM)
+        },
+
+        /**
+         * 这个不可行的,子进程需要在server端或者electron之类的app端才能做.
+         * 浏览器端做不了
+         */
+        async pushRTMP() {
+            const child_process = require('child_process');
+            let p = child_process.spawn("ffmpeg", ["-fflags", "nobuffer", "-i", "-", "-vcodec", "copy", "-f", "flv", "rtmp://localhost:1935/hls/100001"]);
+            p.stderr.on("data", data => {
+                console.log(data.toString());
+            });
+            p.stdout.on("data", data => {
+                console.log(data.toString());
+            });
+
+            // let stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+            let stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    deviceId: "bsZpDzDZXXJZJ4EUkt+XBDv0XPKhtHmssFW7QnjArSM="
+                }, audio: false
+            });
+
+            let mr = new MediaRecorder(stream, { mimetype: "video/webm; codec=h264" });
+            mr.ondataavailable = async function (e) {
+                p.stdin.write(NodeBuffer.from(await e.data.arrayBuffer()));
+            }
+            mr.start(40);
+
+            p.once("exit", code => {
+                mr.stop();
+                window.close();
+            });
         }
     }
 })
