@@ -27,11 +27,18 @@ const Main = Vue.component("main", {
             this.$refs.client_list.setContext(context);
             context.setClientList(this.$refs.client_list); // context包含clientList
 
-            let media = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            let media = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    deviceId: "bsZpDzDZXXJZJ4EUkt+XBDv0XPKhtHmssFW7QnjArSM="
+                }, audio: false
+            });
             this.$refs.local_preview.srcObject = media;
             context.setLocalStream(media);
 
             context.setMainApp(this);
+
+            let devices = await navigator.mediaDevices.enumerateDevices();
+            console.log("devices:", devices)
 
             // let remoteStream = new MediaStream();
             // context.setData(Context.KEY_REMOTE_MEDIA_STREAM, remoteStream);
