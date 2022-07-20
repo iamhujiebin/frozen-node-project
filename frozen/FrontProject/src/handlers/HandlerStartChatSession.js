@@ -8,7 +8,7 @@ import Config from "../config"
  * @param {Context} context 
  * @param {*} receiverSocketId
  */
-async function HandlerStartChatSession(e, context, receiverSocketId) {
+async function HandlerStartChatSession (e, context, receiverSocketId) {
     let offerPc = context.getData(receiverSocketId, Context.KEY_OFFER_PEER_CONNECTION)
     if (offerPc) {
         // 原来就创建了offer了,不必重新创建
@@ -28,7 +28,7 @@ async function HandlerStartChatSession(e, context, receiverSocketId) {
         }
     }
 
-    let remoteStream = new MediaStream();
+    let remoteStream = new MediaStream()
     context.mainApp.setRemoteStream(receiverSocketId, remoteStream)
     offerPc.ontrack = e => {
         remoteStream.addTrack(e.track)
@@ -37,7 +37,7 @@ async function HandlerStartChatSession(e, context, receiverSocketId) {
     /**
      * @type {MediaStream}
      */
-    let stream = context.getLocalStream();
+    let stream = context.getLocalStream()
     stream.getTracks().forEach(t => {
         offerPc.addTrack(t)
     })
@@ -48,10 +48,10 @@ async function HandlerStartChatSession(e, context, receiverSocketId) {
     }
     context.setData(receiverSocketId, Context.KEY_DATA_CHANNEL, dataChannel)
 
-    let offer = await offerPc.createOffer();
+    let offer = await offerPc.createOffer()
     context.socketIO.emit(SocketEvents.OFFER, { receiver: receiverSocketId, offer: offer })
 
     await offerPc.setLocalDescription(new RTCSessionDescription(offer))
 }
 
-export default HandlerStartChatSession;
+export default HandlerStartChatSession

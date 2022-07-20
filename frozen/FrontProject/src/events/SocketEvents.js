@@ -6,4 +6,4 @@ const SocketEvents = {
     ANSWER_ICE: "answerIce",
 }
 
-export default SocketEvents;
+export default SocketEvents

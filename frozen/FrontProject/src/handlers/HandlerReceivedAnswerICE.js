@@ -1,4 +1,4 @@
-import Context from "../context";
+import Context from "../context"
 
 /**
  * 
@@ -6,7 +6,7 @@ import Context from "../context";
  * @param {Context} context 
  * @param {*} data 
  */
-async function HandlerReceivedAnswserICE(e, context, data) {
+async function HandlerReceivedAnswserICE (e, context, data) {
     /**
      * @type {RTCPeerConnection}
      */
@@ -14,4 +14,4 @@ async function HandlerReceivedAnswserICE(e, context, data) {
     await offerPc.addIceCandidate(new RTCIceCandidate(data.ice))
 }
 
-export default HandlerReceivedAnswserICE;
+export default HandlerReceivedAnswserICE

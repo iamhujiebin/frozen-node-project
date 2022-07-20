@@ -1,6 +1,6 @@
-import SocketEvents from "../events/SocketEvents";
-import Context from "../context";
-import Config from "../config";
+import SocketEvents from "../events/SocketEvents"
+import Context from "../context"
+import Config from "../config"
 
 /**
  * 
@@ -8,18 +8,18 @@ import Config from "../config";
  * @param {Context} context 
  * @param {*} data // {sender:sender,offer:offer}
  */
-async function HandlerReceivedOffer(e, context, data) {
+async function HandlerReceivedOffer (e, context, data) {
     let answerPc = new RTCPeerConnection(Config.PC_INIT_CONFIG)
     /**
      * @type {MediaStream}
      */
-    let localStream = context.getLocalStream();
+    let localStream = context.getLocalStream()
     localStream.getTracks().forEach(t => {
         answerPc.addTrack(t)
     })
     context.setData(data.sender, Context.KEY_ANSWER_PERR_CONNECTION, answerPc)
 
-    let remoteStream = new MediaStream();
+    let remoteStream = new MediaStream()
     context.mainApp.setRemoteStream(data.sender, remoteStream)
     answerPc.ontrack = e => {
         remoteStream.addTrack(e.track)

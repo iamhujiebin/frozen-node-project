@@ -1,11 +1,11 @@
-import Context from '../context';
-import Tpl from './ClientList.html';
-import Events from '../events/Events';
+import Context from '../context'
+import Tpl from './ClientList.html'
+import Events from '../events/Events'
 
 const ClientList = Vue.component("client-list", {
     template: Tpl,
 
-    data() {
+    data () {
         return {
             clients: ["结冰", "梦茵"],
             currentSocketId: "",
@@ -13,29 +13,29 @@ const ClientList = Vue.component("client-list", {
             msg: "",
             ta: "",
             taMap: new Map() // {targetSocketId:$socketId,ta:$ta"}
-        };
+        }
     },
 
     methods: {
-        setClients(clients) {
-            this.clients.length = 0;
-            this.clients.push(...clients);
+        setClients (clients) {
+            this.clients.length = 0
+            this.clients.push(...clients)
         },
         /**
          * 
          * @param {Context} context 
          */
-        setContext(context) {
-            this._context = context;
+        setContext (context) {
+            this._context = context
             // this.currentSocketId = context.socketIO.socketId; // 这个时候不能设置自己的socketId,还没ready
-            this.addSocketListeners();
+            this.addSocketListeners()
         },
-        sendMsg() {
+        sendMsg () {
             /**
              * @type {Context}
              */
-            let context = this._context;
-            context._socketio.sendMsg(this.msg, this.selectSocketId);
+            let context = this._context
+            context._socketio.sendMsg(this.msg, this.selectSocketId)
             let session = this.taMap.get(this.selectSocketId)
             if (!session) {
                 session = {
@@ -43,16 +43,16 @@ const ClientList = Vue.component("client-list", {
                     "ta": ""
                 }
             }
-            session.ta += "我说:" + this.msg + "\n";
+            session.ta += "我说:" + this.msg + "\n"
             this.ta = session.ta
             this.taMap.set(this.selectSocketId, session)
             this.msg = ''
         },
-        addSocketListeners() {
+        addSocketListeners () {
             /**
              * @type {Context}
              */
-            let context = this._context;
+            let context = this._context
             context._socketio._socket.on("msg", msg => {
                 let session = this.taMap.get(msg.sender)
                 if (!session) {
@@ -61,7 +61,7 @@ const ClientList = Vue.component("client-list", {
                         "ta": ""
                     }
                 }
-                session.ta += "TA说:" + msg.msg + "\n";
+                session.ta += "TA说:" + msg.msg + "\n"
                 this.taMap.set(msg.sender, session)
                 if (this.selectSocketId == msg.sender) {
                     this.ta = session.ta
@@ -69,12 +69,12 @@ const ClientList = Vue.component("client-list", {
             })
             context._socketio._socket.on("listClients", clients => {
                 console.log("currentSocketID:", context.socketIO.socketId)
-                this.currentSocketId = context.socketIO.socketId; // 这个时候能设置自己的socketId
-                this.setClients(clients);
+                this.currentSocketId = context.socketIO.socketId // 这个时候能设置自己的socketId
+                this.setClients(clients)
             })
         },
-        targetSocketIDClicked(e) {
-            this.selectSocketId = $(e.target).data("socket_id");
+        targetSocketIDClicked (e) {
+            this.selectSocketId = $(e.target).data("socket_id")
             if (this.selectSocketId == this.currentSocketId) {
                 console.log("选自己不需要建立webrtc连接")
                 return
@@ -82,7 +82,7 @@ const ClientList = Vue.component("client-list", {
             /**
             * @type {Context}
             */
-            let context = this._context;
+            let context = this._context
             context.fire(Events.START_CHAT_SESSION, this.selectSocketId)
 
             let session = this.taMap.get(this.selectSocketId)
@@ -95,7 +95,7 @@ const ClientList = Vue.component("client-list", {
             this.ta = session.ta
             this.taMap.set(this.selectSocketId, session)
         },
-        targetSocketIDClickHook(socketId) {
+        targetSocketIDClickHook (socketId) {
             this.selectSocketId = socketId
             let session = this.taMap.get(socketId)
             if (!session) {
@@ -105,25 +105,25 @@ const ClientList = Vue.component("client-list", {
                 }
             }
             this.ta = session.ta
-            this.$forceUpdate();
+            this.$forceUpdate()
         },
-        getSocketIdLabel(socketId) {
+        getSocketIdLabel (socketId) {
             if (!this._context) {
                 return
             }
             if (socketId != this._context._socketio.socketId) {
                 return socketId
             } else {
-                return socketId + "[自己]";
+                return socketId + "[自己]"
             }
         },
-        getStyle(socketId) {
+        getStyle (socketId) {
             if (socketId == this.selectSocketId) {
                 return "background-color: black; color: white;"
             }
             return ""
         }
     }
-});
+})
 
-export default ClientList;
+export default ClientList

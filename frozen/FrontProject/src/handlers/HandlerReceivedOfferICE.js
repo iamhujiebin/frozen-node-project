@@ -1,4 +1,4 @@
-import Context from "../context";
+import Context from "../context"
 
 /**
  * 
@@ -6,7 +6,7 @@ import Context from "../context";
  * @param {Context} context 
  * @param {*} data 
  */
-async function HandlerReceivedOfferICE(e, context, data) {
+async function HandlerReceivedOfferICE (e, context, data) {
     /**
      * @type {RTCPeerConnection}
      */

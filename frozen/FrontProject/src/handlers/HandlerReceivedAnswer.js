@@ -1,4 +1,4 @@
-import Context from "../context";
+import Context from "../context"
 
 /**
  * 
@@ -6,7 +6,7 @@ import Context from "../context";
  * @param {Context} context 
  * @param {*} data 
  */
-async function HandlerReceivedAnswser(e, context, data) {
+async function HandlerReceivedAnswser (e, context, data) {
     console.log("answer:", data.answer)
     /**
      * @type {RTCPeerConnection}
@@ -18,4 +18,4 @@ async function HandlerReceivedAnswser(e, context, data) {
     context.mainApp.setRemoteStream(data.sender, media)
 }
 
-export default HandlerReceivedAnswser;
+export default HandlerReceivedAnswser

@@ -9,4 +9,4 @@ const Events = {
     START_CHAT_SESSION: "startChatSession",
 }
 
-export default Events;
+export default Events
