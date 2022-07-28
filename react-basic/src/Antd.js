@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Input, Table, Space, Popconfirm } from 'antd'
 import axios from 'axios'
 import React from 'react'
@@ -32,32 +33,35 @@ class App extends React.Component {
           <Space size="middle">
             <Popconfirm title="确定要删除吗?"
               onConfirm={() => this.handleDelete(record.id)}>
-              <span>删除</span>
+              <a href='#'>删除</a>
             </Popconfirm>
           </Space>
         ),
       },
-    ]
+    ],
+    data_json: "data.json",
   }
 
   // 搜索
   onSearch = async (value) => {
-    const res = await axios.get(`http://localhost:3001/data/?q=${value}`)
+    const res = await axios.get(`./data_search.json`)
     this.setState({
-      list: res.data
+      list: res.data.data
     })
   }
   // 删除
   handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3001/data/${id}`)
+    // await axios.delete(`./data_delete.json`)
+    this.setState({
+      data_json: "data_delete.json"
+    })
     this.loadList()
   }
   // 加载列表
   loadList = async () => {
-    const res = await axios.get('http://localhost:3001/data')
-    console.log(res)
+    const res = await axios.get(this.state.data_json)
     this.setState({
-      list: res.data
+      list: res.data.data
     })
   }
   componentDidMount () {
