@@ -26,7 +26,7 @@ List.propTypes = {
   list: PropTypes.array.isRequired
 }
 
-class Component extends React.Component {
+class App extends React.Component {
   state = {
     list: [
       { id: 1, name: '超级好吃的棒棒糖', price: 18.8, info: '开业大酬宾，全场8折' },
@@ -59,4 +59,4 @@ class Component extends React.Component {
   }
 }
 
-export default Component
+export default App
