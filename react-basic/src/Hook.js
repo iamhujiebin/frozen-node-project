@@ -1,27 +1,32 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { Input, Space, Popconfirm, Table } from 'antd'
 import "./Antd.css"
+import Context from './Context'
 
 const { Search } = Input
 
 function App () {
+  const searchRef = useRef(null)
+  const placeholder = useContext(Context)
   const [dataJson, setDataJson] = useState('data.json')
   const [list, setList] = useState([])
   const loadList = async (data = 'data.json') => {
     const res = await axios.get(data)
     setList(res.data.data)
   }
-  // []: 启动的时候执行一次
+  // []: 启动的时候执行一次，在dom渲染完之后执行
+  useEffect(() => {
+    console.log('SearchRef', searchRef.current)
+  }, [])
   // [$param]: param变化的时候执行
   useEffect(() => {
-    console.log('useEffect move', dataJson)
+    console.log('dataJson move,but vm first has two', dataJson)
     loadList(dataJson)
   }, [dataJson])
 
   const del = async (id) => {
-    console.log(id)
     // await axios.delete('./data_delete.json')
     setDataJson('data_delete.json')
   }
@@ -65,8 +70,8 @@ function App () {
   return (
     <div className='container'>
       <div className='search-box'>
-        <Search
-          placeholder='请输入关键词'
+        <Search ref={searchRef}
+          placeholder={placeholder}
           allowClear
           enterButton='搜索'
           size='large'
