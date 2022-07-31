@@ -8,7 +8,7 @@ import App from './Hook'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-  <React.StrictMode>
+  <React.StrictMode> {/*严格模式会导致本地调试，useEffet []调用两次*/}
     <Context.Provider value={'这里是Context的跨组件传递'}>
       <App />
     </Context.Provider>

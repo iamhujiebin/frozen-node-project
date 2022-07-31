@@ -18,11 +18,11 @@ function App () {
   }
   // []: 启动的时候执行一次，在dom渲染完之后执行
   useEffect(() => {
-    console.log('SearchRef', searchRef.current)
+    console.log('after dom render:SearchRef', searchRef.current)
   }, [])
-  // [$param]: param变化的时候执行
+  // [$param]: 启动+param变化的时候执行
   useEffect(() => {
-    console.log('dataJson move,but vm first has two', dataJson)
+    console.log('dataJson change,but strict mode has two', dataJson)
     loadList(dataJson)
   }, [dataJson])
 
@@ -35,6 +35,10 @@ function App () {
     // const res = await axios.get('./data_search.json')
     // setList(res.data.data)
     setDataJson('data_search.json')
+  }
+
+  const onCancel = async () => {
+    setDataJson('data.json')
   }
 
   const columns = [
@@ -59,7 +63,7 @@ function App () {
       key: 'do',
       render: (text, record) => (
         <Space size='middle'>
-          <Popconfirm title='确定要删除吗？' onConfirm={() => del(record.id)}>
+          <Popconfirm title='确定要删除吗？' onCancel={onCancel} onConfirm={() => del(record.id)}>
             <a href='#'>删除</a>
           </Popconfirm>
         </Space>
