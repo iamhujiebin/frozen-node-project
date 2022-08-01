@@ -13,6 +13,7 @@ const Login = () => {
     const { mobile, code } = data
     try {
       await loginStore.login({ mobile, code })
+      message.success('登录成功')
       navigate('/') // 登录成功跳转 根路径
     } catch (e) {
       console.log('err?', e)
