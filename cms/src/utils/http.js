@@ -1,5 +1,5 @@
 import axios from "axios"
-import { getToken } from "./token"
+import { getToken, clearToken, history } from "@/utils"
 
 const http = axios.create({
   baseURL: 'http://geek.itheima.net/v1_0',
@@ -9,9 +9,9 @@ const http = axios.create({
 // 请求拦截器
 // congfig: http的config
 http.interceptors.request.use((config) => {
-  const token = getToken
+  const token = getToken()
   if (token) {
-    config.headers.Authorrization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`
   }
   return config
 }, (error) => {
@@ -22,6 +22,11 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use((response) => {
   return response.data
 }, (error) => {
+  if (error.response.status === 401) {
+    console.log('401:', error.response)
+    clearToken()
+    history.push('/login')
+  }
   return Promise.reject(error) // 会throw error，可以被catch到
 })
 

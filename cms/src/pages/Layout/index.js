@@ -1,12 +1,15 @@
 import './index.scss'
 import { Layout, Popconfirm, Menu } from "antd"
+import { observer } from 'mobx-react-lite'
 import {
   LogoutOutlined,
   HomeOutlined,
   DiffOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useStore } from '@/store'
+import { useEffect } from 'react'
 const { Header, Sider } = Layout
 
 const MenuList = [
@@ -30,14 +33,28 @@ const MenuList = [
 const CMSLayout = () => {
   const location = useLocation()
   const selectedKey = location.pathname
+  const { userStore, loginStore } = useStore()
+  const navigate = useNavigate()
+  const onLogout = () => {
+    loginStore.logout()
+    navigate('/login')
+  }
+  useEffect(() => {
+    // 用axios包就要try包住，非200就会走到catch
+    try {
+      userStore.getUserInfo()
+    } catch (e) {
+      console.error('get user fail', e)
+    }
+  }, [userStore])
   return (
     <Layout>
       <Header className="header">
         <div className="logo"></div>
         <div className="user-info">
-          <span className="user-name">user.name</span>
+          <span className="user-name">{userStore.userInfo.name}</span>
           <span className="user-logout">
-            <Popconfirm title='是否确认退出?' okText='退出' cancelText='取消'>
+            <Popconfirm title='是否确认退出?' okText='退出' cancelText='取消' onConfirm={onLogout}>
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
@@ -71,4 +88,4 @@ const CMSLayout = () => {
   )
 }
 
-export default CMSLayout
+export default observer(CMSLayout)

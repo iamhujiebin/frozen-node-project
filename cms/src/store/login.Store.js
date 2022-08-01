@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx"
-import { http } from '@/utils'
-import { clearToken, getToken, setToken } from "@/utils/token"
+import { http, clearToken, getToken, setToken } from '@/utils'
 
 class LoginStore {
   token = getToken() || ''

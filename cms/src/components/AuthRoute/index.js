@@ -1,4 +1,4 @@
-import { getToken } from "@/utils/token"
+import { getToken } from "@/utils"
 import { Navigate } from "react-router-dom"
 
 const AuthRoute = ({ children }) => {
