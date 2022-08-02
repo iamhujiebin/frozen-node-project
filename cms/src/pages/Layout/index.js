@@ -6,6 +6,7 @@ import {
   HomeOutlined,
   DiffOutlined,
   EditOutlined,
+  FormOutlined,
 } from '@ant-design/icons'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '@/store'
@@ -27,6 +28,11 @@ const MenuList = [
     key: '/publish',
     icon: <EditOutlined />,
     label: (<Link to='/publish'>发布文章</Link>),
+  },
+  {
+    key: '/todo',
+    icon: <FormOutlined />,
+    label: (<Link to='/todo'>todolist</Link>),
   }
 ]
 
