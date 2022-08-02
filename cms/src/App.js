@@ -1,17 +1,23 @@
 import { Route, Routes } from "react-router-dom"
-
-import Login from '@/pages/Login'
-import CMSLayout from '@/pages/Layout'
 import { AuthRoute } from "./components/AuthRoute"
-import Home from "@/pages/Home"
-import Article from "@/pages/Article"
-import Publish from "@/pages/Publish"
 import { HistoryRouter, history } from '@/utils'
+import Loading from "./components/Loading"
+
+// 按需导入组件
+// loading中的也可以实现一个简单组件
+import { lazy, Suspense } from 'react'
+const Login = lazy(() => import('@/pages/Login'))
+const CMSLayout = lazy(() => import('@/pages/Layout'))
+const Article = lazy(() => import("@/pages/Article"))
+const Publish = lazy(() => import('@/pages/Publish'))
+const Home = lazy(() => import('@/pages/Home'))
 
 function App () {
   return (
     <HistoryRouter history={history}>
-      <div className="App">
+      <Suspense
+        fallback={<Loading />}
+      >
         <Routes>
           <Route path='/' element={
             <AuthRoute>
@@ -25,7 +31,7 @@ function App () {
           </Route>
           <Route path='/login' element={<Login />} />
         </Routes>
-      </div>
+      </Suspense>
     </HistoryRouter>
   )
 }
