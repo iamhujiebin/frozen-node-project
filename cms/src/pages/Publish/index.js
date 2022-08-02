@@ -1,6 +1,6 @@
 import { Breadcrumb, Button, Card, Form, Input, message, Radio, Select, Space, Upload } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -10,7 +10,10 @@ import { observer } from 'mobx-react-lite'
 import { http, history } from '@/utils'
 
 const { Option } = Select
+
 const Publish = () => {
+  const [params] = useSearchParams()
+  const articleId = params.get('id')
   const { channelStore } = useStore()
   useEffect(() => {
     try {
@@ -64,6 +67,27 @@ const Publish = () => {
       console.error('publish article fail', e)
     }
   }
+  // 获取文章(编辑时)
+  const form = useRef(null)
+  useEffect(() => {
+    async function getArticle () {
+      try {
+        const res = await http.get(`/mp/articles/${articleId}`)
+        const { cover, ...formValue } = res.data
+        console.log(formValue)
+        form.current.setFieldsValue({ ...formValue, type: cover.type })
+        const imageList = cover.images.map(item => ({ url: item })) // antd.Upload格式要求
+        setFileList(imageList)
+        setImgCount(cover.type)
+        fileListRef.current = imageList // dom元素
+      } catch (e) {
+        message.error('fetch article fail', 2).then(() => { history.push('/article') }) // onClose回调
+      }
+    }
+    if (articleId) {
+      getArticle()
+    }
+  }, [articleId, form])
   return (
     <div className="publish">
       <Card
@@ -72,7 +96,7 @@ const Publish = () => {
             <Breadcrumb.Item>
               <Link to='/'>首页</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>发布文章</Breadcrumb.Item>
+            <Breadcrumb.Item>{!articleId ? '发布文章' : '编辑文章'}</Breadcrumb.Item>
           </Breadcrumb>
         }
       >
@@ -81,6 +105,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1, content: '' }}
           onFinish={onFinish}
+          ref={form}
         >
           <Form.Item
             label='标题'
@@ -140,7 +165,7 @@ const Publish = () => {
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
-              <Button size='large' type='primary' htmlType='submit'>发布文章</Button>
+              <Button size='large' type='primary' htmlType='submit'>{articleId ? '修改文章' : '发布文章'}</Button>
             </Space>
           </Form.Item>
         </Form>
