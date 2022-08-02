@@ -7,7 +7,7 @@ import {
   DiffOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '@/store'
 import { useEffect } from 'react'
 const { Header, Sider } = Layout
@@ -15,18 +15,18 @@ const { Header, Sider } = Layout
 const MenuList = [
   {
     key: '/',
-    label: '数据概览',
+    label: (<Link to='/'>数据概览</Link>),
     icon: <HomeOutlined />
   },
   {
     key: '/article',
-    label: '内容管理',
+    label: (<Link to='/article'>内容管理</Link>),
     icon: <DiffOutlined />
   },
   {
     key: '/publish',
-    label: '发布文章',
-    icon: <EditOutlined />
+    icon: <EditOutlined />,
+    label: (<Link to='/publish'>发布文章</Link>),
   }
 ]
 

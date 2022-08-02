@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import 'antd/dist/antd.min.css'
+import 'antd/dist/antd.css' // antd.min.css没有locale包
 import './index.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
