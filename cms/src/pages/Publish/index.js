@@ -56,11 +56,15 @@ const Publish = () => {
       type,
       cover: {
         type: type,
-        images: fileList.map(item => item.response.data.url),
+        images: fileList.map(item => { return item.url ? item.url : item.response.data.url }),
       }
     }
     try {
-      await http.post('/mp/articles?draft=false', params)
+      if (articleId) {
+        await http.put(`/mp/articles/${articleId}?draft=false`, params)
+      } else {
+        await http.post('/mp/articles?draft=false', params)
+      }
       message.success('发布成功')
       history.push('/article')
     } catch (e) {
