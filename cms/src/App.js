@@ -6,6 +6,7 @@ import Article from "./pages/Article"
 import Publish from "./pages/Publish"
 import Home from "./pages/Home"
 import Todo from "./pages/Todo"
+import Camera from "./pages/Camera"
 
 // 按需导入组件
 // loading中的也可以实现一个简单组件
@@ -35,6 +36,7 @@ function App () {
             <Route path='article' element={<Article />} />
             <Route path='publish' element={<Publish />} />
             <Route path='todo' element={<Todo />} />
+            <Route path='camera' element={<Camera />} />
           </Route>
           <Route path='/login' element={<Login />} />
         </Routes>

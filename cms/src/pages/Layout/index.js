@@ -7,6 +7,7 @@ import {
   DiffOutlined,
   EditOutlined,
   FormOutlined,
+  VideoCameraAddOutlined,
 } from '@ant-design/icons'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '@/store'
@@ -33,6 +34,11 @@ const MenuList = [
     key: '/todo',
     icon: <FormOutlined />,
     label: (<Link to='/todo'>todolist</Link>),
+  },
+  {
+    key: '/camera',
+    icon: <VideoCameraAddOutlined />,
+    label: (<Link to='/camera'>连麦</Link>),
   }
 ]
 
