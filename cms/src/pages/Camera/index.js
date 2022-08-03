@@ -1,9 +1,11 @@
-import { Menu, message, Space, Input, } from "antd"
+import { Menu, message, Space, Input } from "antd"
 import { useEffect, useRef, useState, } from "react"
+import { observer } from "mobx-react-lite"
 import { history } from '@/utils'
 import './index.scss'
+import { useStore } from "@/store"
 
-const { TextArea, Search } = Input
+const { Search } = Input
 
 // 是否能用麦克风/摄像头
 function canGetUserMediaUse () {
@@ -33,9 +35,14 @@ async function getUserMedia (constrains) {
 }
 
 const Camera = () => {
+  const { socketioStore } = useStore()
   const videoLocalRef = useRef(null)
   const videoRemoteRef = useRef(null)
+  const textAreaRef = useRef(null)
   const mediaStream = useRef(new MediaStream()) // 可以用来做暂存
+  useEffect(() => {
+    socketioStore.connect()
+  }, [socketioStore])
   // 获取音视频
   useEffect(() => {
     if (!canGetUserMediaUse) {
@@ -64,21 +71,16 @@ const Camera = () => {
     console.log('click ', e)
     setChatCurrent(e.key)
   }
-  // 列表数据 todo get from useState
-  const items = [
-    {
-      label: 'self',
-      key: 'self',
-    },
-    {
-      label: 'remote1',
-      key: 'remote1',
-    }
-  ]
   // 发送聊天数据
-  const chatRef = useRef(null)
+  const [chatValue, setChatValue] = useState('')
   const onChatSend = (value) => {
-    chatRef.current.input.value = ''
+    console.log('value', value)
+    if (!value) {
+      return
+    }
+    socketioStore.sendMsg(chatValue)
+    setChatValue('')
+    textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight
   }
   return <div>
     <Space className="video" size='large'>
@@ -93,10 +95,21 @@ const Camera = () => {
         controls autoPlay>
       </video>
     </Space>
-    <Menu className="chat" onClick={onChatClick} selectedKeys={[chatCurrent]} mode="horizontal" items={items}></Menu>
-    <TextArea rows={10} readOnly />
-    <Search ref={chatRef} placeholder="请输入..." enterButton="发送" size="large" onSearch={onChatSend} allowClear />
+    <Menu
+      className="chat"
+      onClick={onChatClick}
+      selectedKeys={[chatCurrent]}
+      mode="horizontal"
+      items={socketioStore.menuItems}>
+    </Menu>
+    <textarea
+      ref={textAreaRef}
+      style={{ width: '100%' }}
+      rows={10}
+      value={socketioStore.textAreaMsgs} readOnly
+    />
+    <Search value={chatValue} onChange={(e) => setChatValue(e.target.value)} placeholder="请输入..." enterButton="发送" size="large" onSearch={(value) => onChatSend(value)} allowClear />
   </div >
 }
 
-export default Camera
+export default observer(Camera)
