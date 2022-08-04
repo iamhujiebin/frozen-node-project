@@ -69,19 +69,19 @@ const Camera = () => {
     }
   }, [])
   // 聊天状态
-  const [chatCurrent, setChatCurrent] = useState('self')
-  const onChatClick = (e) => {
-    console.log('click ', e)
-    setChatCurrent(e.key)
+  const [target, setTarget] = useState('')
+  const onReceiverClick = (e) => {
+    setTarget(e.key)
   }
   // 发送聊天数据
   const [chatValue, setChatValue] = useState('')
   const onChatSend = (value) => {
-    console.log('value', value)
     if (!value) {
+      message.error('你要选非自己的一个人发送非空白数据')
       return
     }
-    socketioStore.sendMsg(chatValue)
+    // 公屏
+    socketioStore.publicMsg(chatValue)
     setChatValue('')
     textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight
   }
@@ -100,8 +100,8 @@ const Camera = () => {
     </Space>
     <Menu
       className="chat"
-      onClick={onChatClick}
-      selectedKeys={[chatCurrent]}
+      onClick={onReceiverClick}
+      selectedKeys={[target]}
       mode="horizontal"
       items={socketioStore.menuItems}>
     </Menu>
@@ -111,7 +111,14 @@ const Camera = () => {
       rows={10}
       value={socketioStore.textAreaMsgs} readOnly
     />
-    <Search value={chatValue} onChange={(e) => setChatValue(e.target.value)} placeholder="请输入..." enterButton="发送" size="large" onSearch={(value) => onChatSend(value)} allowClear />
+    <Search
+      value={chatValue}
+      onChange={(e) => setChatValue(e.target.value)}
+      placeholder="请输入..."
+      enterButton="发送"
+      size="large"
+      onSearch={(value) => onChatSend(value)} allowClear
+    />
   </div >
 }
 

@@ -2,6 +2,9 @@ import { io } from "socket.io-client"
 import UserStore from "@/store/user.Store" // 不能直接用useStore,貌似因为useStore用了React的东西,只能组件内使用
 import { makeAutoObservable } from "mobx" // 用到info的数据了，所以要响应式
 
+// socketio 命令字
+const PublicMsgEvent = 'public-msg'
+
 class SocketIOStore {
   name = ''
   menuItems = []
@@ -19,7 +22,6 @@ class SocketIOStore {
 
       // 在promise返回拿到name再连socket.io
       this.name = userStore.userInfo.name
-      this.menuItems = [{ 'label': this.name, 'key': 'self' }]
       this.socket = io('http://127.0.0.1:4443')
       this.socket.on('connect', () => {
         console.log('socket id', this.socket.id)
@@ -30,8 +32,17 @@ class SocketIOStore {
       })
       this.socket.emit('login', userStore.userInfo.name)
 
-      this.socket.on('msg', msg => {
+      this.socket.on(PublicMsgEvent, msg => {
         this.textAreaMsgs = this.textAreaMsgs + msg + '\n'
+      })
+      this.socket.on('listClients', data => {
+        var clients = JSON.parse(data)
+        console.log('listClients', clients)
+        var menuItems = []
+        clients?.forEach((item) => {
+          menuItems.push({ 'label': item.name, 'key': item.id })
+        })
+        this.menuItems = menuItems
       })
 
     }).catch(e => {
@@ -48,8 +59,12 @@ class SocketIOStore {
   get socketInfo () {
     return this.info
   }
-  sendMsg = (msg) => {
-    this.socket?.emit('msg', msg)
+  publicMsg = (msg) => {
+    const data = {
+      sender: this.socket?.id,
+      msg
+    }
+    this.socket?.emit(PublicMsgEvent, data)
   }
 }
 
