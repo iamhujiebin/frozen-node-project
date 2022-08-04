@@ -42,6 +42,9 @@ const Camera = () => {
   const mediaStream = useRef(new MediaStream()) // 可以用来做暂存
   useEffect(() => {
     socketioStore.connect()
+    return () => {
+      socketioStore.disconnect()
+    }
   }, [socketioStore])
   // 获取音视频
   useEffect(() => {

@@ -19,7 +19,7 @@ class SocketIOStore {
 
       // 在promise返回拿到name再连socket.io
       this.name = userStore.userInfo.name
-      this.menuItems = [{ 'label': this.name, 'key': this.name === this.name ? 'self' : this.name }]
+      this.menuItems = [{ 'label': this.name, 'key': 'self' }]
       this.socket = io('http://127.0.0.1:4443')
       this.socket.on('connect', () => {
         console.log('socket id', this.socket.id)
