@@ -47,6 +47,7 @@ const Camera = () => {
     }
   }, [socketioStore])
   // 获取音视频
+  const { webrtcStore } = useStore()
   useEffect(() => {
     if (!canGetUserMediaUse) {
       message.error('不可以用麦克风/摄像头', 2).then(() => history.push('/'))
@@ -66,8 +67,9 @@ const Camera = () => {
       mediaStream?.current?.getTracks()?.forEach(t => {
         t.stop()
       })
+      webrtcStore.clearStates()
     }
-  }, [])
+  }, [webrtcStore])
 
   // 发送聊天数据
   const [chatValue, setChatValue] = useState('')
@@ -83,7 +85,6 @@ const Camera = () => {
   }
 
   // 视频连麦对象
-  const { webrtcStore } = useStore()
   webrtcStore.setSocketIO(socketioStore)
   webrtcStore.setLocalStream(mediaStream.current)
   webrtcStore.setRemoteStreamRef(videoRemoteRef)

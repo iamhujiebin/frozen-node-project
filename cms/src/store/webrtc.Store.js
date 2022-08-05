@@ -149,6 +149,14 @@ class WebrtcStore {
   async receiveAnswerIce (data) {
     await this.offerPc?.addIceCandidate(new RTCIceCandidate(data.ice))
   }
+  clearStates () {
+    this.remoteStream?.getTracks().forEach(t => {
+      t.stop()
+    })
+    // this.remoteStreamRef.current.srcObject = ''
+    this.answer = ''
+    this.offerPc = null
+  }
 }
 
 export default WebrtcStore

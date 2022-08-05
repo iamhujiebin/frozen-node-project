@@ -4,6 +4,8 @@
 - 统计
 - 列表查询
 - 发布文章
+- todo 列表
+- webrtc 连麦
 
 # cmd 管理系统技术栈
 
@@ -13,7 +15,3 @@
 - antd: 前端 UI
 - mobx: 存储状态
 - craco: 打包管理
-
-# 加入 todo 模块
-
-# 加入 webrtc 的连麦

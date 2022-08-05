@@ -1,12 +1,15 @@
-var http = require('http').createServer()
+const { createServer } = require("http")
+const { Server } = require("socket.io")
+const { instrument } = require("@socket.io/admin-ui")
 
-const io = require('socket.io')(http, {
+const httpServer = createServer()
+const io = new Server(httpServer, {
     cors: {
-        origin: "*",
+        origin: ["https://admin.socket.io", "http://localhost:3000", "http://localhost:3001"],
+        credentials: true,
         allowedHeaders: ["Access-Control-Allow-Origin"],
     }
 })
-
 var clientMap = new Map()
 
 // 广播连接的client
@@ -82,6 +85,11 @@ io.on('connect', (socket) => {
     })
 })
 
-http.listen(4443, () => {
+// socket.io admin ui
+instrument(io, {
+    auth: false
+})
+
+httpServer.listen(4443, () => {
     console.log("listening on 4443")
 })
