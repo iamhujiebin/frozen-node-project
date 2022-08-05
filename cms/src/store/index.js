@@ -4,6 +4,7 @@ import UserStore from "./user.Store"
 import ChannelStore from "./channel.Store"
 import TodoStore from "./todo.Store"
 import SocketIOStore from "./socketio.Store"
+import WebrtcStore from "./webrtc.Store"
 
 class RootStore {
   constructor() {
@@ -12,6 +13,7 @@ class RootStore {
     this.channelStore = new ChannelStore()
     this.todoStore = new TodoStore()
     this.socketioStore = new SocketIOStore()
+    this.webrtcStore = new WebrtcStore()
   }
 }
 

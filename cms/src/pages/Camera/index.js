@@ -68,11 +68,7 @@ const Camera = () => {
       })
     }
   }, [])
-  // 聊天状态
-  const [target, setTarget] = useState('')
-  const onReceiverClick = (e) => {
-    setTarget(e.key)
-  }
+
   // 发送聊天数据
   const [chatValue, setChatValue] = useState('')
   const onChatSend = (value) => {
@@ -84,6 +80,17 @@ const Camera = () => {
     socketioStore.publicMsg(chatValue)
     setChatValue('')
     textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight
+  }
+
+  // 视频连麦对象
+  const { webrtcStore } = useStore()
+  webrtcStore.setSocketIO(socketioStore)
+  webrtcStore.setLocalStream(mediaStream.current)
+  webrtcStore.setRemoteStreamRef(videoRemoteRef)
+  const [target, setTarget] = useState('')
+  const onReceiverClick = (e) => {
+    setTarget(e.key)
+    webrtcStore.createOffer(e.key)
   }
   return <div>
     <Space className="video" size='large'>

@@ -9,17 +9,16 @@ class SocketIOStore {
   name = ''
   menuItems = []
   textAreaMsgs = ''
-  info = {
-    socket: null,
-    isLogin: false,
-  }
   constructor() {
     makeAutoObservable(this)
   }
   connect = () => {
     const userStore = new UserStore()
     userStore.getUserInfo().then(() => {
-
+      if (this.socket) {
+        console.log('new socket before')
+        return
+      }
       // 在promise返回拿到name再连socket.io
       this.name = userStore.userInfo.name
       this.socket = io('http://127.0.0.1:4443')
@@ -27,7 +26,6 @@ class SocketIOStore {
         console.log('socket id', this.socket.id)
       })
       this.socket.on('login', (msg) => {
-        console.log('login', msg)
         this.isLogin = true
       })
       this.socket.emit('login', userStore.userInfo.name)
@@ -37,7 +35,6 @@ class SocketIOStore {
       })
       this.socket.on('listClients', data => {
         var clients = JSON.parse(data)
-        console.log('listClients', clients)
         var menuItems = []
         clients?.forEach((item) => {
           menuItems.push({ 'label': item.name, 'key': item.id })
@@ -56,9 +53,6 @@ class SocketIOStore {
     this.socket = null
     this.name = ''
   }
-  get socketInfo () {
-    return this.info
-  }
   publicMsg = (msg) => {
     const data = {
       sender: this.socket?.id,
@@ -66,6 +60,15 @@ class SocketIOStore {
     }
     this.socket?.emit(PublicMsgEvent, data)
   }
+  emit = (event, data) => {
+    this.socket?.emit(event, data)
+  }
+  get socketId () {
+    return this.socket?.id
+  }
+  // get socket () {
+  //   return this.socket
+  // }
 }
 
 export default SocketIOStore

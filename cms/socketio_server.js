@@ -51,6 +51,35 @@ io.on('connect', (socket) => {
         console.log(publicMsg)
         io.of('/').emit('public-msg', publicMsg)
     })
+    // webrtc连麦
+    socket.on('offer', data => {
+        console.log('offer', data.sender, data.receiver)
+        const { receiver } = data
+        if (receiver) {
+            io.to(receiver).emit('offer', data)
+        }
+    })
+    socket.on('answer', data => {
+        console.log('answer', data.sender, data.receiver)
+        const { receiver } = data
+        if (receiver) {
+            io.to(receiver).emit('answer', data)
+        }
+    })
+    socket.on('offerIce', data => {
+        console.log('offerIce', data.sender, data.receiver)
+        const { receiver } = data
+        if (receiver) {
+            io.to(receiver).emit('offerIce', data)
+        }
+    })
+    socket.on('answerIce', data => {
+        console.log('answerIce', data.sender, data.receiver)
+        const { receiver } = data
+        if (receiver) {
+            io.to(receiver).emit('answerIce', data)
+        }
+    })
 })
 
 http.listen(4443, () => {

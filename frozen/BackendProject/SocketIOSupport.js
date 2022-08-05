@@ -32,6 +32,7 @@ function configSocketIO (server) {
 
         socket.on("offer", data => {
             let receiver = data.receiver
+            console.log("offer", data.sender, data.receiver)
             if (receiver) {
                 io.to(receiver).emit("offer", data)
             }
@@ -39,6 +40,7 @@ function configSocketIO (server) {
 
         socket.on("answer", data => {
             let receiver = data.receiver
+            console.log("answer", data.sender, data.receiver)
             if (receiver) {
                 io.to(receiver).emit("answer", data)
             }
@@ -46,6 +48,7 @@ function configSocketIO (server) {
 
         socket.on("offerIce", data => {
             let receiver = data.receiver
+            console.log("offerIce", data.sender, data.receiver)
             if (receiver) {
                 io.to(receiver).emit("offerIce", data)
             }
@@ -53,6 +56,7 @@ function configSocketIO (server) {
 
         socket.on("answerIce", data => {
             let receiver = data.receiver
+            console.log("answerIce", data.sender, data.receiver)
             if (receiver) {
                 io.to(receiver).emit("answerIce", data)
             }
