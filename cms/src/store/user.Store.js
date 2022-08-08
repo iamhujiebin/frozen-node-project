@@ -1,4 +1,5 @@
 import { http } from "@/utils"
+import { setUser } from "@/utils/token"
 import { makeAutoObservable } from "mobx"
 
 class UserStore {
@@ -10,6 +11,7 @@ class UserStore {
     const res = await http.get('/user/profile')
     console.log('user', res.data)
     this.userInfo = res.data
+    setUser(res.data.name)
   }
 }
 

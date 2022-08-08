@@ -35,20 +35,21 @@ async function getUserMedia (constrains) {
 }
 
 const Camera = () => {
-  const { socketioStore } = useStore()
   const videoLocalRef = useRef(null)
   const videoRemoteRef = useRef(null)
   const textAreaRef = useRef(null)
-  const mediaStream = useRef(new MediaStream()) // 可以用来做暂存
+  const mediaStream = useRef(new MediaStream()) // ref做暂存mediaStream
+  const { socketioStore, webrtcStore } = useStore()
+  // 初始化socketio/webrtc
   useEffect(() => {
-    socketioStore.connect()
+    socketioStore.connect().then(() => {
+      socketioStore.setWebrtc(webrtcStore)
+      webrtcStore.setSocketIO(socketioStore)
+    })
     return () => {
       socketioStore.disconnect()
     }
-  }, [socketioStore])
-  // 获取音视频
-  const { webrtcStore } = useStore()
-  socketioStore.setWebrtc(webrtcStore)
+  }, [socketioStore, webrtcStore])
   useEffect(() => {
     if (!canGetUserMediaUse) {
       message.error('不可以用麦克风/摄像头', 2).then(() => history.push('/'))
@@ -86,7 +87,6 @@ const Camera = () => {
   }
 
   // 视频连麦对象
-  webrtcStore.setSocketIO(socketioStore)
   webrtcStore.setLocalStream(mediaStream.current)
   webrtcStore.setRemoteStreamRef(videoRemoteRef)
   const [target, setTarget] = useState('')

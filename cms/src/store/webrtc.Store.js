@@ -54,6 +54,7 @@ class WebrtcStore {
   }
   // 创建webrtc offer
   async createOffer (receiver) {
+    console.log('createOffer', receiver)
     let offerPc = new RTCPeerConnection(Config.PC_INIT_CONFIG)
     offerPc.onicecandidate = e => {
       if (e.candidate) {
