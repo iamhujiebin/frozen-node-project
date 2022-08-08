@@ -40,6 +40,7 @@ class SocketIOStore {
           menuItems.push({ 'label': item.name, 'key': item.id })
         })
         this.menuItems = menuItems
+        this.webrtcStore?.clearStates() // 暂时简化成成员变化就清理
       })
 
     }).catch(e => {
@@ -66,9 +67,9 @@ class SocketIOStore {
   get socketId () {
     return this.socket?.id
   }
-  // get socket () {
-  //   return this.socket
-  // }
+  setWebrtc (webrtcStore) {
+    this.webrtcStore = webrtcStore
+  }
 }
 
 export default SocketIOStore

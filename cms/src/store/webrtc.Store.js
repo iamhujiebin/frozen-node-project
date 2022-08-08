@@ -54,10 +54,6 @@ class WebrtcStore {
   }
   // 创建webrtc offer
   async createOffer (receiver) {
-    if (this.offerPc) {
-      console.log('create offer before')
-      return
-    }
     let offerPc = new RTCPeerConnection(Config.PC_INIT_CONFIG)
     offerPc.onicecandidate = e => {
       if (e.candidate) {
@@ -132,11 +128,7 @@ class WebrtcStore {
 
   // 收到webrtc answer！ 建立连接咯！
   async receiveAnswer (data) {
-    if (this.answer) {
-      console.log('receiver answer before')
-      return
-    }
-    this.answer = data.answer
+    console.log('answer', data.answer)
     this.offerPc.setRemoteDescription(new RTCSessionDescription(data.answer))
   }
 
@@ -153,9 +145,21 @@ class WebrtcStore {
     this.remoteStream?.getTracks().forEach(t => {
       t.stop()
     })
-    // this.remoteStreamRef.current.srcObject = ''
-    this.answer = ''
-    this.offerPc = null
+    this.remoteStream = new MediaStream() // 重置remoteStream
+    if (this.offerPc) {
+      this.offerPc.ontrack = null
+      this.offerPc.onicecandidate = null
+      this.offerPc.close()
+      this.offerPc = null
+    }
+    if (this.answerPc) {
+      this.answerPc.ontrack = null
+      this.answerPc.onicecandidate = null
+      this.answerPc.close()
+      this.answerPc = null
+    }
+    this.remoteStreamRef?.current?.removeAttribute('src')
+    this.remoteStreamRef?.current?.removeAttribute('srcObject')
   }
 }
 

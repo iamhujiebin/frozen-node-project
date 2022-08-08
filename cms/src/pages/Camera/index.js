@@ -48,6 +48,7 @@ const Camera = () => {
   }, [socketioStore])
   // 获取音视频
   const { webrtcStore } = useStore()
+  socketioStore.setWebrtc(webrtcStore)
   useEffect(() => {
     if (!canGetUserMediaUse) {
       message.error('不可以用麦克风/摄像头', 2).then(() => history.push('/'))
