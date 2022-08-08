@@ -2,14 +2,53 @@ import { Breadcrumb, Button, Card, Form, Input, message, Radio, Select, Space, U
 import { PlusOutlined } from '@ant-design/icons'
 import { Link, useSearchParams } from 'react-router-dom'
 import './index.scss'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
 import { useStore } from '@/store'
 import { useEffect, useRef, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { http, history } from '@/utils'
+import ReactQuill, { Quill } from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import quillEmoji from 'quill-emoji'
+import "quill-emoji/dist/quill-emoji.css" //这个不引入的话会出现emoji框一直在输入框下面的情况
+import { ImageDrop } from 'quill-image-drop-module' //讲图片拖进文本框，可以直接安装quill-image-drop-module；但由于我的webpack版本过低，无法兼容es6，所以把插件拿出来了
+//注册ToolbarEmoji，将在工具栏出现emoji；注册TextAreaEmoji，将在文本输入框处出现emoji。VideoBlot是我自定义的视频组件，后面会讲，
+const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
+Quill.register({
+  'formats/emoji': EmojiBlot,
+  'modules/emoji-shortname': ShortNameEmoji,
+  'modules/emoji-toolbar': ToolbarEmoji,
+  'modules/emoji-textarea': TextAreaEmoji,
+  // 'modules/ImageExtend': ImageExtend, //拖拽图片扩展组件
+  'modules/ImageDrop': ImageDrop, //复制粘贴组件
+}, true)
 
 const { Option } = Select
+
+const quillModules = {
+  toolbar: {
+    container: [
+      [{ 'size': ['small', false, 'large', 'huge'] }], //字体设置
+      // [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //标题字号，不能设置单个字大小
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+      ['link', 'image'], // a链接和图片的显示
+      [{ 'align': [] }],
+      ['clean'], //清空
+      ['emoji'], //emoji表情，设置了才能显示
+      ['code-block'], // 代码块
+    ],
+  },
+  // ImageExtend: {
+  //   loading: true,
+  //   name: 'img',
+  //   action: RES_URL + "connector?isRelativePath=true",
+  //   response: res => FILE_URL + res.info.url
+  // },
+  ImageDrop: true,
+  'emoji-toolbar': true,  //是否展示出来
+  "emoji-textarea": false, //我不需要emoji展示在文本框所以设置为false
+  "emoji-shortname": true,
+}
 
 const Publish = () => {
   const [params] = useSearchParams()
@@ -165,6 +204,7 @@ const Publish = () => {
               className='publish-quill'
               theme='snow'
               placeholder='请输入文章内容'
+              modules={quillModules}
             ></ReactQuill>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 4 }}>
