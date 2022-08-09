@@ -55,7 +55,7 @@ const Camera = () => {
       message.error('不可以用麦克风/摄像头', 2).then(() => history.push('/'))
       return // 记得return,不然后面还会执行
     }
-    const promise = getUserMedia({ video: true, audio: false })
+    const promise = getUserMedia({ video: true, audio: true })
     promise.then(stream => {
       mediaStream.current = stream
       videoLocalRef.current.srcObject = stream
@@ -99,7 +99,9 @@ const Camera = () => {
       <video
         ref={videoLocalRef}
         className="video-local"
-        controls autoPlay>
+        controls autoPlay
+        playsinline muted
+      >
       </video>
       <video
         ref={videoRemoteRef}
