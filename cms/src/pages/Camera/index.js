@@ -42,15 +42,6 @@ const Camera = () => {
   const { socketioStore, webrtcStore } = useStore()
   // 初始化socketio/webrtc
   useEffect(() => {
-    socketioStore.connect().then(() => {
-      socketioStore.setWebrtc(webrtcStore)
-      webrtcStore.setSocketIO(socketioStore)
-    })
-    return () => {
-      socketioStore.disconnect()
-    }
-  }, [socketioStore, webrtcStore])
-  useEffect(() => {
     if (!canGetUserMediaUse) {
       message.error('不可以用麦克风/摄像头', 2).then(() => history.push('/'))
       return // 记得return,不然后面还会执行
@@ -59,19 +50,29 @@ const Camera = () => {
     promise.then(stream => {
       mediaStream.current = stream
       videoLocalRef.current.srcObject = stream
+      // 初始化webrtc/socketio
+      socketioStore.connect().then(() => {
+        socketioStore.setWebrtc(webrtcStore)
+        webrtcStore.setSocketIO(socketioStore)
+        webrtcStore.setLocalStream(mediaStream.current)
+        webrtcStore.setRemoteStreamRef(videoRemoteRef)
+      })
     }
     ).catch(err => {
       message.error('get stream fail')
     })
+    // 清理函数
     return () => {
-      // 清理函数
-      // ?语法可以先保证不会null
+      // 清理socket.io
+      socketioStore.disconnect()
+      // 清理流
       mediaStream?.current?.getTracks()?.forEach(t => {
         t.stop()
       })
+      // 清理webrtc
       webrtcStore.clearStates()
     }
-  }, [webrtcStore])
+  }, [socketioStore, webrtcStore])
 
   // 发送聊天数据
   const [chatValue, setChatValue] = useState('')
@@ -86,9 +87,6 @@ const Camera = () => {
     textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight
   }
 
-  // 视频连麦对象
-  webrtcStore.setLocalStream(mediaStream.current)
-  webrtcStore.setRemoteStreamRef(videoRemoteRef)
   const [target, setTarget] = useState('')
   const onReceiverClick = (e) => {
     setTarget(e.key)
@@ -100,13 +98,13 @@ const Camera = () => {
         ref={videoLocalRef}
         className="video-local"
         controls autoPlay
-        playsinline muted
+        muted
       >
       </video>
       <video
         ref={videoRemoteRef}
         className="video-remote"
-        controls autoPlay>
+        autoPlay>
       </video>
     </Space>
     <Menu

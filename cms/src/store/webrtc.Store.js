@@ -21,7 +21,7 @@ const SocketEvents = {
 class WebrtcStore {
   socketio = new SocketIOStore()
   localStream = new MediaStream()
-  remoteStream = new MediaStream()
+  remoteStream = null
   offerPc = null
   answerPc = null
   // constructor() {
@@ -65,8 +65,12 @@ class WebrtcStore {
     }
     // 接收对方的流
     offerPc.ontrack = e => {
+      if (!this.remoteStream) {
+        this.remoteStream = new MediaStream()
+      }
       this.remoteStream.addTrack(e.track)
       this.remoteStreamRef.current.srcObject = this.remoteStream
+      console.log('ontrack', e, this.remoteStreamRef.current, this.remoteStream)
     }
     // 推送自己的流
     this.localStream.getTracks().forEach(t => {
@@ -76,6 +80,9 @@ class WebrtcStore {
     let dc = offerPc.createDataChannel('MessageChannel')
     dc.onopen = e => {
       dc.send('Hello from RTC')
+    }
+    dc.onmessage = msg => {
+      console.log('offer dc:', msg)
     }
     // 创建offer
     let offer = await offerPc.createOffer() // get from stun server
@@ -95,10 +102,14 @@ class WebrtcStore {
     console.log('answer pc', answerPc)
     // 推送自己的流
     this.localStream.getTracks().forEach(t => {
+      console.log('ansswer add track', t)
       answerPc.addTrack(t)
     })
     // 获取对方的流
     answerPc.ontrack = e => {
+      if (!this.remoteStream) {
+        this.remoteStream = new MediaStream()
+      }
       this.remoteStream.addTrack(e.track)
       this.remoteStreamRef.current.srcObject = this.remoteStream
     }
@@ -116,6 +127,9 @@ class WebrtcStore {
       dc.onmessage = ev => {
         console.log('msg from dc', ev)
       }
+      setTimeout(() => {
+        dc.send('dc msg back')
+      }, 5000)
     }
     // 设置SDP
     await answerPc.setRemoteDescription(new RTCSessionDescription(data.offer))
@@ -130,7 +144,7 @@ class WebrtcStore {
   // 收到webrtc answer！ 建立连接咯！
   async receiveAnswer (data) {
     console.log('answer', data.answer)
-    this.offerPc.setRemoteDescription(new RTCSessionDescription(data.answer))
+    await this.offerPc.setRemoteDescription(new RTCSessionDescription(data.answer))
   }
 
   // offerIce
@@ -146,7 +160,7 @@ class WebrtcStore {
     this.remoteStream?.getTracks().forEach(t => {
       t.stop()
     })
-    this.remoteStream = new MediaStream() // 重置remoteStream
+    this.remoteStream = null // 重置remoteStream
     if (this.offerPc) {
       this.offerPc.ontrack = null
       this.offerPc.onicecandidate = null
@@ -159,8 +173,10 @@ class WebrtcStore {
       this.answerPc.close()
       this.answerPc = null
     }
-    this.remoteStreamRef?.current?.removeAttribute('src')
-    this.remoteStreamRef?.current?.removeAttribute('srcObject')
+    if (this.remoteStreamRef?.current) {
+      this.remoteStreamRef.current.srcObject = new MediaStream()
+    }
+    this.offerPc = null
   }
 }
 
