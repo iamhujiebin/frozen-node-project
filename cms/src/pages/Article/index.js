@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import './index.scss'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import img404 from '@/assets/error.png'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { EditOutlined, DeleteOutlined, LayoutOutlined } from '@ant-design/icons'
 import { useStore } from "@/store"
 import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
@@ -53,6 +53,7 @@ const Article = () => {
       render: data => {
         return (
           <Space size='middle'>
+            <Link to={`/detail?id=${data.id}`} target="_blank"><Button type='primary' shape='circle' icon={<LayoutOutlined />} onClick={() => history.push()} /></Link>
             <Button type='primary' shape='circle' icon={<EditOutlined />} onClick={() => history.push(`/publish?id=${data.id}`)}></Button>
             <Popconfirm
               title='确认删除该条文章吗？'

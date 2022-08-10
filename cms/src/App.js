@@ -11,6 +11,7 @@ import Camera from "./pages/Camera"
 // 按需导入组件
 // loading中的也可以实现一个简单组件
 import { lazy, Suspense } from 'react'
+const Detail = lazy(() => import("@/pages/Detail"))
 const Login = lazy(() => import('@/pages/Login'))
 const CMSLayout = lazy(() => import('@/pages/Layout'))
 // 下面这些二级路由没必要懒加载,用户体验有点不好
@@ -39,6 +40,7 @@ function App () {
             <Route path='camera' element={<Camera />} />
           </Route>
           <Route path='/login' element={<Login />} />
+          <Route path='/detail' element={<Detail />} />
         </Routes>
       </Suspense>
     </HistoryRouter>
