@@ -15,3 +15,13 @@
 - antd: 前端 UI
 - mobx: 存储状态
 - craco: 打包管理
+
+# 初始化启动说明
+
++ npm install --force
++ npm start
++ 留意package.json
+    + npm run *
+    + server: socket io server
+    + ui: ui for socket io
+    + etc
