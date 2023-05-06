@@ -1,4 +1,5 @@
 import {makeAutoObservable} from "mobx"
+import {http} from "@/utils"
 
 class TodoStore {
     list = [
@@ -21,34 +22,37 @@ class TodoStore {
         makeAutoObservable(this)
     }
 
-    getMyTodo = () => {
-        this.list = [
-            {
-                id: 3,
-                htmlId: "todo-3",
-                name: '重温react',
-                isDone: false,
-            },
-            {
-                id: 4,
-                htmlId: "todo-4",
-                name: '搞掂todolist',
-                isDone: false,
-            }
-        ]
+    getMyTodo = async () => {
+        const res = await http.get("/mp/todolist")
+        this.list = res.data ? res.data : []
     }
     singleCheck = (id, checked) => {
-        let item = this.list.find(item => item.id === id)
-        item.isDone = checked
+        const param = {
+            "isDone": checked,
+        }
+        http.put("/mp/todolist/" + id, param).then(r => {
+            let item = this.list.find(item => item.id === id)
+            item.isDone = checked
+        }).catch(e => alert("fail"))
     }
     allCheck = (checked) => {
-        this.list.forEach(item => item.isDone = checked)
+        http.post("/mp/todolist/markAll", {"isDone": checked}).then(r => {
+            this.list.forEach(item => item.isDone = checked)
+        }).catch(e => alert("fail"))
     }
     delTodo = (id) => {
-        this.list = this.list.filter(item => item.id !== id)
+        http.delete("/mp/todolist/" + id).then(r => {
+            this.list = this.list.filter(item => item.id !== id)
+        }).catch(e => alert("fail"))
     }
     addTodo = (newTodo) => {
-        this.list.push(newTodo)
+        const param = {
+            "name": newTodo.name
+        }
+        http.post("/mp/todolist", param).then(r => {
+            newTodo.id = r.data
+            this.list = [newTodo, ...this.list]
+        }).catch(e => alert("fail"))
     }
 
     get isFinished() {

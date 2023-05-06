@@ -7,7 +7,8 @@ import uuid from 'react-uuid'
 function Todo() {
     const {todoStore} = useStore()
     useEffect(() => {
-        todoStore.getMyTodo()
+        todoStore.getMyTodo().then(r => {
+        })
     }, [])
     const singleCheck = (id, e) => {
         todoStore.singleCheck(id, e.target.checked)
@@ -27,7 +28,6 @@ function Todo() {
             const id = uuid()
             todoStore.addTodo({
                 id: id,
-                htmlId: "todo-" + id,
                 name: todoValue,
                 isDone: false,
             })
