@@ -23,7 +23,8 @@ const AntdDemo = () => {
                 setList(res.results);
             });
     }, []);
-    const onLoadMore = (e) => {
+    const [form] = Form.useForm();
+    const onLoadMore = (values) => {
         // setLoading(true);
         // setList(
         //     data.concat(
@@ -34,7 +35,8 @@ const AntdDemo = () => {
         //         })),
         //     ),
         // );
-        alert(e.sendText)
+        console.log(values);
+        form.resetFields();
         fetch(fakeDataUrl)
             .then((res) => res.json())
             .then((res) => {
@@ -76,14 +78,13 @@ const AntdDemo = () => {
                             <List.Item.Meta
                                 avatar={<Avatar src={item.picture.large}/>}
                                 title={<a href="https://ant.design">{item.name?.last}</a>}
-                                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-
+                                description={item.desc ? item.desc : "Ant Design, a design language for background applications, is refined by Ant UED Team"}
                             />
                         </Skeleton>
                     </List.Item>
                 )}
             />
-            <Form onFinish={onLoadMore}>
+            <Form form={form} onFinish={onLoadMore}>
                 <Form.Item
                     name={'sendText'}
                 >
