@@ -22,7 +22,7 @@ const AntdDemo = () => {
                 // setData(res.results);
                 setList(res.results);
             });
-    }, []);
+    }, [fakeDataUrl]);
     const [form] = Form.useForm();
     const onLoadMore = (values) => {
         // setLoading(true);

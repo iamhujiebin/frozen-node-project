@@ -3,8 +3,9 @@ import {getToken, clearToken, history} from "@/utils"
 
 const http = axios.create({
     // baseURL: 'http://geek.itheima.net/v1_0',
-    baseURL: 'http://47.244.34.27:7000/v1_0',
-    timeout: 5000,
+    // baseURL: 'http://47.244.34.27:7000/v1_0',
+    baseURL: 'http://127.0.0.1:7000/v1_0',
+    timeout: 100000,
 })
 
 // 请求拦截器

@@ -8,6 +8,7 @@ import {
     EditOutlined,
     FormOutlined,
     VideoCameraAddOutlined,
+    RedditCircleFilled,
 } from '@ant-design/icons'
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {useStore} from '@/store'
@@ -40,6 +41,11 @@ const MenuList = [
         key: '/camera',
         icon: <VideoCameraAddOutlined/>,
         label: (<Link to='/camera'>连麦</Link>),
+    },
+    {
+        key: '/chatgpt',
+        icon: <RedditCircleFilled/>,
+        label: (<Link to='/chatgpt'>ChatGPT</Link>),
     },
     {
         key: '/antddemo',

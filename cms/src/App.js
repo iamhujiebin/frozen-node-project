@@ -8,6 +8,7 @@ import Home from "./pages/Home"
 import Todo from "./pages/Todo"
 import Camera from "./pages/Camera"
 import AntdDemo from "./pages/AntdDemo"
+import ChatGPT from "@/pages/ChatGPT";
 
 // 按需导入组件
 // loading中的也可以实现一个简单组件
@@ -40,6 +41,7 @@ function App() {
                         <Route path='publish' element={<Publish/>}/>
                         <Route path='todo' element={<Todo/>}/>
                         <Route path='camera' element={<Camera/>}/>
+                        <Route path='chatgpt' element={<ChatGPT/>}/>
                         <Route path='antddemo' element={<AntdDemo/>}/>
                     </Route>
                     <Route path='/login' element={<Login/>}/>
