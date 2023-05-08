@@ -1,4 +1,4 @@
-import {Radio, Space, Button, Tooltip, Divider, Dropdown, Avatar, List, Skeleton, Input} from "antd";
+import {Radio, Space, Button, Tooltip, Divider, Dropdown, Avatar, List, Skeleton, Input, Form} from "antd";
 import {SearchOutlined} from "@ant-design/icons"
 import {useEffect, useState} from "react";
 
@@ -23,7 +23,7 @@ const AntdDemo = () => {
                 setList(res.results);
             });
     }, []);
-    const onLoadMore = () => {
+    const onLoadMore = (e) => {
         // setLoading(true);
         // setList(
         //     data.concat(
@@ -34,6 +34,7 @@ const AntdDemo = () => {
         //         })),
         //     ),
         // );
+        alert(e.sendText)
         fetch(fakeDataUrl)
             .then((res) => res.json())
             .then((res) => {
@@ -82,10 +83,16 @@ const AntdDemo = () => {
                     </List.Item>
                 )}
             />
-            <Space.Compact>
-                <Input defaultValue={"Send something"}/>
-                <Button type={'primary'} onClick={onLoadMore}>Summit</Button>
-            </Space.Compact>
+            <Form onFinish={onLoadMore}>
+                <Form.Item
+                    name={'sendText'}
+                >
+                    <Input placeholder={"Send something"}/>
+                </Form.Item>
+                <Form.Item>
+                    <Button type={'primary'} htmlType={'submit'}>Summit</Button>
+                </Form.Item>
+            </Form>
         </>
     )
 }
