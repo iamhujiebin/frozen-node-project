@@ -1,6 +1,6 @@
-import {Radio, Space, Button, Tooltip, Divider, Dropdown} from "antd";
+import {Radio, Space, Button, Tooltip, Divider, Dropdown, Avatar, List, Skeleton, Input} from "antd";
 import {SearchOutlined} from "@ant-design/icons"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const AntdDemo = () => {
     const btnClick = () => {
@@ -11,6 +11,37 @@ const AntdDemo = () => {
     }
     const [size, setSize] = useState('large')
     const [loading, setLoading] = useState(false)
+    const [list, setList] = useState([])
+    const count = 3;
+    const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
+    useEffect(() => {
+        fetch(fakeDataUrl)
+            .then((res) => res.json())
+            .then((res) => {
+                // setInitLoading(false);
+                // setData(res.results);
+                setList(res.results);
+            });
+    }, []);
+    const onLoadMore = () => {
+        // setLoading(true);
+        // setList(
+        //     data.concat(
+        //         [...new Array(count)].map(() => ({
+        //             loading: true,
+        //             name: {},
+        //             picture: {},
+        //         })),
+        //     ),
+        // );
+        fetch(fakeDataUrl)
+            .then((res) => res.json())
+            .then((res) => {
+                const newData = res.results.concat(list);
+                setList(newData);
+                // window.dispatchEvent(new Event('resize'));
+            });
+    };
     return (
         <>
             <Radio.Group value={size} onChange={(e) => setSize(e.target.value)}>
@@ -30,6 +61,31 @@ const AntdDemo = () => {
                     Dropdown
                 </Dropdown.Button>
             </Space>
+            <Divider orientation={'left'}>Divider</Divider>
+            <List
+                bordered
+                loading={false}
+                itemLayout="horizontal"
+                dataSource={list}
+                renderItem={(item) => (
+                    <List.Item
+                        // style={{justifyContent: "flex-end"}}
+                    >
+                        <Skeleton avatar title={false} loading={item.loading} active>
+                            <List.Item.Meta
+                                avatar={<Avatar src={item.picture.large}/>}
+                                title={<a href="https://ant.design">{item.name?.last}</a>}
+                                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+
+                            />
+                        </Skeleton>
+                    </List.Item>
+                )}
+            />
+            <Space.Compact>
+                <Input defaultValue={"Send something"}/>
+                <Button type={'primary'} onClick={onLoadMore}>Summit</Button>
+            </Space.Compact>
         </>
     )
 }
