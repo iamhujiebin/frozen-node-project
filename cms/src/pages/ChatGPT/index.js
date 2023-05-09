@@ -1,16 +1,18 @@
-import {Avatar, Button, Form, Input, List, Skeleton, Space} from "antd";
+import {Avatar, Input, List, Skeleton, Space} from "antd";
 import {useState} from "react";
 import {http} from "@/utils";
 
-const {TextArea} = Input;
+const {Search} = Input;
 
 const ChatGPT = () => {
     // list: [{role:"user|assistant",content:"**"}]
     const [list, setList] = useState([])
-    const [form] = Form.useForm();
+    const [message, setMessage] = useState('')
+    const handleChange = event => {
+        setMessage(event.target.value);
+    };
     const onFinish = (values) => {
-        form.resetFields()
-        const newList = [...list, {role: "user", content: values.content}]
+        const newList = [...list, {role: "user", content: values}]
         setList(newList)
         http.post("/chatgpt/process", {
             "messages": newList
@@ -20,6 +22,7 @@ const ChatGPT = () => {
         }).catch(e => {
             alert('fail')
         })
+        setMessage('')
     }
     return (
         <>
@@ -42,21 +45,14 @@ const ChatGPT = () => {
                     </List.Item>
                 )}
             />
-            <Form
-                form={form}
-                onFinish={onFinish}
-                layout={"inline"}
-            >
-                <Form.Item
-                    name={'content'}
-                >
-                    {/*<Input placeholder={"Ask Ai"}/>*/}
-                    <TextArea/>
-                </Form.Item>
-                <Form.Item>
-                    <Button type={'primary'} htmlType={'submit'}>Summit</Button>
-                </Form.Item>
-            </Form>
+            <Search
+                placeholder="input your question"
+                size="large"
+                enterButton="Ask Ai"
+                value={message}
+                onSearch={onFinish}
+                onChange={handleChange}
+            />
         </>
     )
 }
