@@ -1,5 +1,5 @@
-import {Avatar, Input, List, Skeleton, Space} from "antd";
-import {useState} from "react";
+import {Avatar, Input, List, Skeleton, Radio, Button, Space} from "antd";
+import {useState, useEffect} from "react";
 import {http} from "@/utils";
 
 const {Search} = Input;
@@ -8,6 +8,28 @@ const ChatGPT = () => {
     // list: [{role:"user|assistant",content:"**"}]
     const [list, setList] = useState([])
     const [message, setMessage] = useState('')
+    const [session, setSession] = useState(0)
+    const [sessionList, setSessionList] = useState([0])
+    useEffect(() => {
+        http.get("chatgpt/session/list").then(r => {
+            setSessionList(r.data)
+        }).catch(e => alert('fail'))
+    }, [])
+    useEffect(() => {
+        http.get("/chatgpt/session/detail/" + session).then(r => {
+            const newList = r.data?.messages ? r.data.messages : []
+            setList(newList)
+        }).catch(e => alert("fail"))
+    }, [session])
+    const onAddSession = e => {
+        http.post("/chatgpt/session/add").then(r => {
+            setSession(r.data)
+            setSessionList([...sessionList, r.data])
+        }).catch(e => alert('fail'))
+    }
+    const onSessionChange = e => {
+        setSession(e.target.value)
+    }
     const handleChange = event => {
         setMessage(event.target.value);
     };
@@ -15,6 +37,7 @@ const ChatGPT = () => {
         const newList = [...list, {role: "user", content: values}]
         setList(newList)
         http.post("/chatgpt/process", {
+            "session_id": session,
             "messages": newList
         }).then(r => {
             const newList = r.data.messages
@@ -26,6 +49,16 @@ const ChatGPT = () => {
     }
     return (
         <>
+            <Space>
+                <Button type="primary" shape="circle" onClick={onAddSession}>A</Button>
+                <Radio.Group value={session} onChange={onSessionChange}>
+                    {
+                        sessionList.map(item => (
+                            <Radio.Button value={item}>{"Chat" + item}</Radio.Button>
+                        ))
+                    }
+                </Radio.Group>
+            </Space>
             <List
                 bordered
                 itemLayout="horizontal"
