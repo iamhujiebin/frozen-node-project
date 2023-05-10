@@ -8,6 +8,7 @@ function Todo() {
     const {todoStore} = useStore()
     useEffect(() => {
         todoStore.getMyTodo().then(r => {
+            console.log(process.env)
         })
     }, [])
     const singleCheck = (id, e) => {
