@@ -27,6 +27,12 @@ const ChatGPT = () => {
             setSessionList([...sessionList, r.data])
         }).catch(e => alert('fail'))
     }
+    const onDelSession = e => {
+        http.delete("/chatgpt/session/del/" + session).then(r => {
+            setSession(0)
+            setSessionList(sessionList.filter(item => item !== session))
+        }).catch(e => alert('fail'))
+    }
     const onSessionChange = e => {
         setSession(e.target.value)
     }
@@ -51,6 +57,7 @@ const ChatGPT = () => {
         <>
             <Space>
                 <Button type="primary" shape="circle" onClick={onAddSession}>A</Button>
+                <Button type="primary" shape="circle" onClick={onDelSession} danger>D</Button>
                 <Radio.Group value={session} onChange={onSessionChange}>
                     {
                         sessionList.map(item => (
