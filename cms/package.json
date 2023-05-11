@@ -17,6 +17,7 @@
     "quill-emoji": "^0.2.0",
     "quill-image-drop-module": "^1.0.3",
     "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-quill": "2.0.0-beta.4",
     "react-router-dom": "^6.3.0",

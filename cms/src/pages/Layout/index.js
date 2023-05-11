@@ -12,53 +12,53 @@ import {
 } from '@ant-design/icons'
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {useStore} from '@/store'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 const {Header, Sider} = Layout
 
-const MenuList = [
-    {
-        key: '/',
-        label: (<Link to='/'>数据概览</Link>),
-        icon: <HomeOutlined/>
-    },
-    {
-        key: '/article',
-        label: (<Link to='/article'>内容管理</Link>),
-        icon: <DiffOutlined/>
-    },
-    {
-        key: '/publish',
-        icon: <EditOutlined/>,
-        label: (<Link to='/publish'>发布文章</Link>),
-    },
-    {
-        key: '/todo',
-        icon: <FormOutlined/>,
-        label: (<Link to='/todo'>todolist</Link>),
-    },
-    {
-        key: '/camera',
-        icon: <VideoCameraAddOutlined/>,
-        label: (<Link to='/camera'>连麦</Link>),
-    },
-    {
-        key: '/chatgpt',
-        icon: <RedditCircleFilled/>,
-        label: (<Link to='/chatgpt'>ChatGPT</Link>),
-    },
-    {
-        key: '/antddemo',
-        icon: <FormOutlined/>,
-        label: (<Link to='/antddemo'>antddemo</Link>)
-    }
-]
-
 const CMSLayout = () => {
+    const MenuList = [
+        {
+            key: '/',
+            label: (<Link to='/'>数据概览</Link>),
+            icon: <HomeOutlined/>
+        },
+        {
+            key: '/article',
+            label: (<Link to='/article'>内容管理</Link>),
+            icon: <DiffOutlined/>
+        },
+        {
+            key: '/publish',
+            icon: <EditOutlined/>,
+            label: (<Link to='/publish'>发布文章</Link>),
+        },
+        {
+            key: '/todo',
+            icon: <FormOutlined/>,
+            label: (<Link to='/todo'>todolist</Link>),
+        },
+        {
+            key: '/camera',
+            icon: <VideoCameraAddOutlined/>,
+            label: (<Link to='/camera'>连麦</Link>),
+        },
+        {
+            key: '/chatgpt',
+            icon: <RedditCircleFilled/>,
+            label: (<Link to='/chatgpt'>ChatGPT</Link>),
+        },
+        {
+            key: '/antddemo',
+            icon: <FormOutlined/>,
+            label: (<Link to='/antddemo'>antddemo</Link>)
+        }
+    ]
     const location = useLocation()
     const selectedKey = location.pathname
     const {userStore, loginStore} = useStore()
     const navigate = useNavigate()
+    const [collapsed, setCollapsed] = useState(true)
     const onLogout = () => {
         loginStore.logout()
         navigate('/login')
@@ -85,7 +85,15 @@ const CMSLayout = () => {
                 </div>
             </Header>
             <Layout>
-                <Sider width={200} className='site-layout-background'>
+                <Sider
+                    collapsible
+                    collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
+                    collapsedWidth="0" // 这里是折叠后特殊样式
+                    zeroWidthTriggerStyle={{
+                        right: "-50px",
+                        top: "15px",
+                    }}
+                >
                     <Menu
                         mode='inline'
                         theme='dark'
@@ -93,15 +101,6 @@ const CMSLayout = () => {
                         style={{height: '100%', borderRight: 0}}
                         items={MenuList}
                     >
-                        {/* <Menu.Item icon={<HomeOutlined />} key='1'>
-              数据概览
-            </Menu.Item>
-            <Menu.Item icon={<HomeOutlined />} key='2'>
-              内容管理
-            </Menu.Item>
-            <Menu.Item icon={<HomeOutlined />} key='3'>
-              发布文章
-            </Menu.Item> */}
                     </Menu>
                 </Sider>
                 <Layout className='layout-content' style={{padding: 20}}>

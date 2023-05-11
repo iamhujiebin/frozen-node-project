@@ -1,4 +1,5 @@
 import {Radio, Space, Button, Tooltip, Divider, Dropdown, Avatar, List, Skeleton, Input, Form} from "antd";
+import {BrowserView, MobileView, isBrowser, isMobile} from 'react-device-detect'
 import {SearchOutlined} from "@ant-design/icons"
 import {useEffect, useState} from "react";
 
@@ -45,6 +46,9 @@ const AntdDemo = () => {
                 // window.dispatchEvent(new Event('resize'));
             });
     };
+    if (isMobile) {
+        return <div> This content is available only on mobile</div>
+    }
     return (
         <>
             <Radio.Group value={size} onChange={(e) => setSize(e.target.value)}>
