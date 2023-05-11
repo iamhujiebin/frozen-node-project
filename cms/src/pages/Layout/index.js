@@ -88,10 +88,10 @@ const CMSLayout = () => {
                 <Sider
                     collapsible
                     collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
-                    collapsedWidth="0" // 这里是折叠后特殊样式
+                    // collapsedWidth="0" // 这里是折叠后特殊样式
                     zeroWidthTriggerStyle={{
                         right: "-50px",
-                        top: "15px",
+                        bottom: "-15px",
                     }}
                 >
                     <Menu
