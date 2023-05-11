@@ -64,7 +64,7 @@ const CMSLayout = () => {
     const selectedKey = location.pathname
     const {userStore, loginStore} = useStore()
     const navigate = useNavigate()
-    const [collapsed, setCollapsed] = useState(true)
+    const [collapsed, setCollapsed] = useState(false)
     const onLogout = () => {
         loginStore.logout()
         navigate('/login')

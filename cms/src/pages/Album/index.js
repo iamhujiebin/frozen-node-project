@@ -52,7 +52,12 @@ const Album = () => {
                 </Radio.Group>
             </Space>
             <Divider orientation={'left'}></Divider>
-            <Carousel autoplay autoplaySpeed={3000} effect={'fade'}>
+            <Carousel
+                dotPosition={"top"}
+                autoplay
+                autoplaySpeed={3000}
+                effect={'fade'}
+            >
                 <div>
                     <img alt={'image1'} style={contentStyle}
                          src={'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp'}/>
