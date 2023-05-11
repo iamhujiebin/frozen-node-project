@@ -1,4 +1,5 @@
-import {Radio, Button, Space, Carousel, Divider, Image} from "antd";
+import {Radio, Button, Space, Carousel, Divider, Upload, message} from "antd";
+import {UploadOutlined} from '@ant-design/icons';
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
 
@@ -35,13 +36,33 @@ const Album = () => {
     const onSessionChange = e => {
         setSession(e.target.value)
     }
+    const props = {
+        name: 'file',
+        action: process.env.REACT_APP_UPLOAD_URL,
+        headers: {
+            authorization: 'authorization-text',
+        },
+        onChange(info) {
+            if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+        showUploadList: false,
+    }
     return (
         <>
             <Space direction={"vertical"}>
                 <Space>
                     <Button type="primary" onClick={onAddSession}>新建相册</Button>
-                    <Button type="primary" onClick={onDelSession}>上传图片</Button>
                     <Button type="primary" onClick={onDelSession} danger>删除相册</Button>
+                    <Upload {...props}>
+                        <Button icon={<UploadOutlined/>}>Click to Upload</Button>
+                    </Upload>
                 </Space>
                 <Radio.Group value={session} onChange={onSessionChange}>
                     {

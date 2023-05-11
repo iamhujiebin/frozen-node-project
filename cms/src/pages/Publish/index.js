@@ -189,7 +189,8 @@ const Publish = () => {
                                 className='avatar-uploader'
                                 showUploadList
                                 // action="http://geek.itheima.net/v1_0/upload"
-                                action="http://47.244.34.27:7002/file/upload"
+                                // action="http://47.244.34.27:7002/file/upload"
+                                action={process.env.REACT_APP_UPLOAD_URL}
                                 fileList={fileList}
                                 onChange={onUploadChange}
                                 maxCount={imgCount}
