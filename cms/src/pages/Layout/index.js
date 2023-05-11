@@ -9,6 +9,7 @@ import {
     FormOutlined,
     VideoCameraAddOutlined,
     RedditCircleFilled,
+    InstagramOutlined
 } from '@ant-design/icons'
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {useStore} from '@/store'
@@ -42,6 +43,11 @@ const CMSLayout = () => {
             key: '/camera',
             icon: <VideoCameraAddOutlined/>,
             label: (<Link to='/camera'>连麦</Link>),
+        },
+        {
+            key: '/album',
+            icon: <InstagramOutlined/>,
+            label: (<Link to='/album'>相册</Link>),
         },
         {
             key: '/chatgpt',

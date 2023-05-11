@@ -14,6 +14,7 @@ import ChatGPT from "@/pages/ChatGPT";
 // loading中的也可以实现一个简单组件
 import {lazy, Suspense} from 'react'
 import Test from "@/pages/Test";
+import Album from "@/pages/Album";
 
 const Detail = lazy(() => import("@/pages/Detail"))
 const Login = lazy(() => import('@/pages/Login'))
@@ -43,6 +44,7 @@ function App() {
                         <Route path='todo' element={<Todo/>}/>
                         <Route path='camera' element={<Camera/>}/>
                         <Route path='chatgpt' element={<ChatGPT/>}/>
+                        <Route path='album' element={<Album/>}/>
                         <Route path='antddemo' element={<AntdDemo/>}/>
                     </Route>
                     <Route path='/login' element={<Login/>}/>
