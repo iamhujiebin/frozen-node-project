@@ -20,25 +20,25 @@ const Album = () => {
     useEffect(() => {
         http.get("/album/list").then(r => {
             setSessionList(r.data)
-        }).catch(e => alert('fail'))
+        }).catch(e => message.error("fail").then())
     }, [])
     useEffect(() => {
         http.get("/album/detail/" + session).then(r => {
             const newList = r.data ? r.data : []
             setList(newList)
-        }).catch(e => alert("fail"))
+        }).catch(e => message.error("fail").then())
     }, [session])
     const onAddSession = e => {
         http.post("/album/add").then(r => {
             setSession(r.data)
             setSessionList([...sessionList, r.data])
-        }).catch(e => alert('fail'))
+        }).catch(e => message.error("fail").then())
     }
     const onDelSession = e => {
         http.delete("/album/del/" + session).then(r => {
             setSession(0)
             setSessionList(sessionList.filter(item => item !== session))
-        }).catch(e => alert('fail'))
+        }).catch(e => message.error("fail").then())
     }
     const onSessionChange = e => {
         setSession(e.target.value)
@@ -61,11 +61,9 @@ const Album = () => {
                     "albumId": session,
                     "images": newList,
                 }).then(r => {
-                    console.log(r)
                     setList(newList)
                 }).catch(e => {
-                    console.error(e)
-                    alert('fail')
+                    message.error("fail").then()
                 })
             } else if (info.file.status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);

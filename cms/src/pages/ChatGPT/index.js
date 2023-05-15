@@ -1,4 +1,4 @@
-import {Avatar, Input, List, Skeleton, Radio, Button, Space} from "antd";
+import {Avatar, Input, List, Skeleton, Radio, Button, Space, message} from "antd";
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
 
@@ -7,37 +7,37 @@ const {Search} = Input;
 const ChatGPT = () => {
     // list: [{role:"user|assistant",content:"**"}]
     const [list, setList] = useState([])
-    const [message, setMessage] = useState('')
+    const [msg, setMsg] = useState('')
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
     useEffect(() => {
         http.get("chatgpt/session/list").then(r => {
             setSessionList(r.data)
-        }).catch(e => alert('fail'))
+        }).catch(e => message.error("fail").then())
     }, [])
     useEffect(() => {
         http.get("/chatgpt/session/detail/" + session).then(r => {
             const newList = r.data?.messages ? r.data.messages : []
             setList(newList)
-        }).catch(e => alert("fail"))
+        }).catch(e => message.error("fail").then())
     }, [session])
     const onAddSession = e => {
         http.post("/chatgpt/session/add").then(r => {
             setSession(r.data)
             setSessionList([...sessionList, r.data])
-        }).catch(e => alert('fail'))
+        }).catch(e => message.error("fail").then())
     }
     const onDelSession = e => {
         http.delete("/chatgpt/session/del/" + session).then(r => {
             setSession(0)
             setSessionList(sessionList.filter(item => item !== session))
-        }).catch(e => alert('fail'))
+        }).catch(e => message.error("fail").then())
     }
     const onSessionChange = e => {
         setSession(e.target.value)
     }
     const handleChange = event => {
-        setMessage(event.target.value);
+        setMsg(event.target.value);
     };
     const onFinish = (values) => {
         const newList = [...list, {role: "user", content: values}]
@@ -49,9 +49,9 @@ const ChatGPT = () => {
             const newList = r.data.messages
             setList(newList)
         }).catch(e => {
-            alert('fail')
+            message.error("fail").then()
         })
-        setMessage('')
+        setMsg('')
     }
     return (
         <>
@@ -89,7 +89,7 @@ const ChatGPT = () => {
                 placeholder="input your question"
                 size="large"
                 enterButton="Ask Ai"
-                value={message}
+                value={msg}
                 onSearch={onFinish}
                 onChange={handleChange}
             />
