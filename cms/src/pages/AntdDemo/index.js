@@ -1,4 +1,19 @@
-import {Radio, Space, Button, Tooltip, Divider, Dropdown, Avatar, List, Skeleton, Input, Form, Table, Tour} from "antd";
+import {
+    Radio,
+    Space,
+    Button,
+    Tooltip,
+    Divider,
+    Dropdown,
+    Avatar,
+    List,
+    Skeleton,
+    Input,
+    Form,
+    Table,
+    Tour,
+    Alert, Drawer
+} from "antd";
 import {BrowserView, MobileView, isBrowser, isMobile} from 'react-device-detect'
 import {SearchOutlined, MenuOutlined} from "@ant-design/icons"
 import React, {useEffect, useState, useRef} from "react";
@@ -11,6 +26,7 @@ import {CSS} from '@dnd-kit/utilities';
 const AntdDemo = () => {
     const ref1 = useRef(null)
     const ref2 = useRef(null)
+    const ref3 = useRef(null)
     const [open, setOpen] = useState(false)
     const steps = [
         {
@@ -22,6 +38,11 @@ const AntdDemo = () => {
             title: 'Submit button',
             description: 'click to load more list.',
             target: () => ref2.current,
+        },
+        {
+            title: 'Drawer button',
+            description: 'click to open drawer.',
+            target: () => ref3.current,
         },
     ]
     const btnClick = () => {
@@ -126,11 +147,24 @@ const AntdDemo = () => {
             })
         }
     }
+    const [drawer, setDrawer] = useState(false)
     if (isMobile) {
         return <div> This content is available only on mobile</div>
     }
     return (<>
-        <Space>
+        <Space direction={"vertical"}>
+            <Alert
+                message="学习网站,非盈利模式"
+                type="warning"
+                closable
+                showIcon
+            />
+            <Alert
+                message="违者必究!"
+                type="error"
+                closable
+                showIcon
+            />
             <Button type={'primary'} onClick={() => setOpen(true)}>Begin Tour</Button>
             <Tour
                 open={open}
@@ -138,6 +172,14 @@ const AntdDemo = () => {
                 steps={steps}
                 indicatorsRender={(current, total) => (<span>{current + 1} / {total}</span>)}
             />
+            <Button ref={ref3} type="primary" onClick={() => setDrawer(true)}>
+                Drawer
+            </Button>
+            <Drawer title="Basic Drawer" placement="right" onClose={() => setDrawer(false)} open={drawer}>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Drawer>
         </Space>
         <Divider orientation={'left'}>Divider</Divider>
         <Radio.Group value={size} onChange={(e) => setSize(e.target.value)}>
