@@ -104,7 +104,7 @@ const Article = () => {
   // params变化时候的副作用
   useEffect(() => {
     async function fetchArticleList () {
-      const res = await http.get('/mp/articles', { params })
+      const res = await http.get('/articles', { params })
       const { results, total_count } = res.data
       // 触发article的渲染
       setArticle({
@@ -144,7 +144,7 @@ const Article = () => {
   }
   // 删除功能
   const onDelArticle = async (data) => {
-    await http.delete(`/mp/articles/${data.id}`)
+    await http.delete(`/articles/${data.id}`)
     // 刷新列表
     setParams({
       page: 1,

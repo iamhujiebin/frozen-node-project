@@ -30,8 +30,8 @@ const Login = () => {
           validateTrigger={['onBlur', 'onChange']}
           onFinish={onFinish}
           initialValues={{
-            mobile: '13911111111',
-            code: '246810'
+            mobile: '13660677198',
+            code: '677198'
           }}
         >
           <Form.Item

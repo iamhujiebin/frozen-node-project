@@ -9,7 +9,7 @@ function Detail () {
   const [article, setArticle] = useState('')
   useEffect(() => {
     async function getArticle () {
-      const res = await http.get(`/mp/articles/${articleId}`)
+      const res = await http.get(`/articles/${articleId}`)
       console.log(res)
       setArticle(res.data.content)
     }

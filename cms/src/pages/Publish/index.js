@@ -102,9 +102,9 @@ const Publish = () => {
         }
         try {
             if (articleId) {
-                await http.put(`/mp/articles/${articleId}?draft=false`, params)
+                await http.put(`/articles/${articleId}?draft=false`, params)
             } else {
-                await http.post('/mp/articles?draft=false', params)
+                await http.post('/articles?draft=false', params)
             }
             message.success('发布成功')
             history.push('/article')
@@ -117,7 +117,7 @@ const Publish = () => {
     useEffect(() => {
         async function getArticle() {
             try {
-                const res = await http.get(`/mp/articles/${articleId}`)
+                const res = await http.get(`/articles/${articleId}`)
                 const {cover, ...formValue} = res.data
                 console.log(formValue)
                 form.current.setFieldsValue({...formValue, type: cover.type})

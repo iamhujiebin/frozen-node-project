@@ -14,13 +14,20 @@ const contentStyle = {
 };
 
 const Album = () => {
+    const [list, setList] = useState([])
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
     useEffect(() => {
-        // http.get("/album/list").then(r => {
-        //     setSessionList(r.data)
-        // }).catch(e => alert('fail'))
+        http.get("/album/list").then(r => {
+            setSessionList(r.data)
+        }).catch(e => alert('fail'))
     }, [])
+    useEffect(() => {
+        http.get("/album/detail/" + session).then(r => {
+            const newList = r.data ? r.data : []
+            setList(newList)
+        }).catch(e => alert("fail"))
+    }, [session])
     const onAddSession = e => {
         http.post("/album/add").then(r => {
             setSession(r.data)
@@ -47,7 +54,19 @@ const Album = () => {
                 console.log(info.file, info.fileList);
             }
             if (info.file.status === 'done') {
+                console.log(info)
                 message.success(`${info.file.name} file uploaded successfully`);
+                const newList = [...list, info.file.response.data.url]
+                http.post("/album/detail", {
+                    "albumId": session,
+                    "images": newList,
+                }).then(r => {
+                    console.log(r)
+                    setList(newList)
+                }).catch(e => {
+                    console.error(e)
+                    alert('fail')
+                })
             } else if (info.file.status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
@@ -79,18 +98,26 @@ const Album = () => {
                 autoplaySpeed={3000}
                 effect={'fade'}
             >
-                <div>
-                    <img alt={'image1'} style={contentStyle}
-                         src={'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp'}/>
-                </div>
-                <div>
-                    <img alt={'image2'} style={contentStyle}
-                         src={'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp'}/>
-                </div>
-                <div>
-                    <img alt={'image3'} style={contentStyle}
-                         src={'https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp'}/>
-                </div>
+                {
+                    list.map((item, index) => (
+                        <div>
+                            <img alt={'image' + index} style={contentStyle}
+                                 src={item}/>
+                        </div>
+                    ))
+                }
+                {/*<div>*/}
+                {/*    <img alt={'image1'} style={contentStyle}*/}
+                {/*         src={'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp'}/>*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*    <img alt={'image2'} style={contentStyle}*/}
+                {/*         src={'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp'}/>*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*    <img alt={'image3'} style={contentStyle}*/}
+                {/*         src={'https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp'}/>*/}
+                {/*</div>*/}
             </Carousel>
         </>
     )

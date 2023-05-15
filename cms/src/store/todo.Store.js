@@ -23,25 +23,25 @@ class TodoStore {
     }
 
     getMyTodo = async () => {
-        const res = await http.get("/mp/todolist")
+        const res = await http.get("/todolist")
         this.list = res.data ? res.data : []
     }
     singleCheck = (id, checked) => {
         const param = {
             "isDone": checked,
         }
-        http.put("/mp/todolist/" + id, param).then(r => {
+        http.put("/todolist/" + id, param).then(r => {
             let item = this.list.find(item => item.id === id)
             item.isDone = checked
         }).catch(e => alert("fail"))
     }
     allCheck = (checked) => {
-        http.post("/mp/todolist/markAll", {"isDone": checked}).then(r => {
+        http.post("/todolist/markAll", {"isDone": checked}).then(r => {
             this.list.forEach(item => item.isDone = checked)
         }).catch(e => alert("fail"))
     }
     delTodo = (id) => {
-        http.delete("/mp/todolist/" + id).then(r => {
+        http.delete("/todolist/" + id).then(r => {
             this.list = this.list.filter(item => item.id !== id)
         }).catch(e => alert("fail"))
     }
@@ -49,7 +49,7 @@ class TodoStore {
         const param = {
             "name": newTodo.name
         }
-        http.post("/mp/todolist", param).then(r => {
+        http.post("/todolist", param).then(r => {
             newTodo.id = r.data
             this.list = [newTodo, ...this.list]
         }).catch(e => alert("fail"))
