@@ -1,7 +1,7 @@
 import {Radio, Space, Button, Tooltip, Divider, Dropdown, Avatar, List, Skeleton, Input, Form, Table} from "antd";
 import {BrowserView, MobileView, isBrowser, isMobile} from 'react-device-detect'
-import {SearchOutlined} from "@ant-design/icons"
-import {useEffect, useState} from "react";
+import {SearchOutlined, MenuOutlined} from "@ant-design/icons"
+import React, {useEffect, useState} from "react";
 import {DndContext} from '@dnd-kit/core';
 import {
     arrayMove,
@@ -77,6 +77,9 @@ const AntdDemo = () => {
     ]);
     const columns = [
         {
+            key: 'sort',
+        },
+        {
             title: 'Name',
             dataIndex: 'name',
         },
@@ -89,8 +92,16 @@ const AntdDemo = () => {
             dataIndex: 'address',
         },
     ];
-    const Row = (props) => {
-        const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
+    const Row = ({children, ...props}) => {
+        const {
+            attributes,
+            listeners,
+            setNodeRef,
+            setActivatorNodeRef,
+            transform,
+            transition,
+            isDragging
+        } = useSortable({
             id: props['data-row-key'],
         });
         const style = {
@@ -100,7 +111,7 @@ const AntdDemo = () => {
                     ...transform,
                     scaleY: 1,
                 },
-            ),
+            )?.replace(/translate3d\(([^,]+),/, 'translate3d(0,'),
             transition,
             cursor: 'move',
             ...(isDragging
@@ -110,7 +121,28 @@ const AntdDemo = () => {
                 }
                 : {}),
         };
-        return <tr {...props} ref={setNodeRef} style={style} {...attributes} {...listeners}/>
+        return <tr {...props} ref={setNodeRef} style={style} {...attributes}>
+            {
+                React.Children.map(children, (child) => {
+                    if (child.key === 'sort') {
+                        return React.cloneElement(child, {
+                            children: (
+                                <MenuOutlined
+                                    ref={setActivatorNodeRef}
+                                    style={{
+                                        touchAction: 'none',
+                                        cursor: 'move',
+                                    }}
+                                    {...listeners}
+                                />
+                            ),
+                        });
+                    }
+                    return child
+                })
+
+            }
+        </tr>
     }
     const onDragEnd = ({active, over}) => {
         if (active.id !== over?.id) {
