@@ -22,8 +22,23 @@ import {
     arrayMove, SortableContext, useSortable, verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
 
 const AntdDemo = () => {
+    const md = `A paragraph with *emphasis* and **strong importance**.
+
+> A block quote with ~strikethrough~ and a URL: https://reactjs.org.
+
+* Lists
+* [ ] todo
+* [x] done
+
+A table:
+
+| a | b |
+| - | - |
+`
     const ref1 = useRef(null)
     const ref2 = useRef(null)
     const ref3 = useRef(null)
@@ -246,6 +261,7 @@ const AntdDemo = () => {
                 />
             </SortableContext>
         </DndContext>
+        <ReactMarkdown children={md} remarkPlugins={[remarkGfm]}/>
     </>)
 }
 

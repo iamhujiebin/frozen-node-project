@@ -1,6 +1,8 @@
 import {Avatar, Input, List, Skeleton, Radio, Button, Space, message} from "antd";
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const {Search} = Input;
 
@@ -85,6 +87,11 @@ const ChatGPT = () => {
                     </List.Item>
                 )}
             />
+            {
+                list.map(item => (
+                    <ReactMarkdown children={item.content} remarkPlugins={[remarkGfm]}/>
+                ))
+            }
             <Search
                 placeholder="input your question"
                 size="large"
