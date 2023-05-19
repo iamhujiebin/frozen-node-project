@@ -1,8 +1,8 @@
 import {Avatar, Input, List, Skeleton, Radio, Button, Space, message} from "antd";
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import Chat from "@/components/ChatList";
+import ChatList from "@/components/ChatList";
 
 const {Search} = Input;
 
@@ -68,29 +68,27 @@ const ChatGPT = () => {
                     }
                 </Radio.Group>
             </Space>
-            <List
-                bordered
-                itemLayout="horizontal"
-                dataSource={list}
-                renderItem={(item) => (
-                    <List.Item
-                        // style={{justifyContent: "flex-end"}}
-                    >
-                        <Skeleton avatar title={false} loading={item.loading} active>
-                            <List.Item.Meta
-                                avatar={<Avatar src={item.role === 'user' ?
-                                    'https://randomuser.me/api/portraits/men/20.jpg' : 'https://randomuser.me/api/portraits/women/27.jpg'}/>}
-                                title={item.role}
-                                description={item.content}
-                            />
-                        </Skeleton>
-                    </List.Item>
-                )}
-            />
+            {/*<List*/}
+            {/*    bordered*/}
+            {/*    itemLayout="horizontal"*/}
+            {/*    dataSource={list}*/}
+            {/*    renderItem={(item) => (*/}
+            {/*        <List.Item*/}
+            {/*            // style={{justifyContent: "flex-end"}}*/}
+            {/*        >*/}
+            {/*            <Skeleton avatar title={false} loading={item.loading} active>*/}
+            {/*                <List.Item.Meta*/}
+            {/*                    avatar={<Avatar src={item.role === 'user' ?*/}
+            {/*                        'https://randomuser.me/api/portraits/men/20.jpg' : 'https://randomuser.me/api/portraits/women/27.jpg'}/>}*/}
+            {/*                    title={item.role}*/}
+            {/*                    description={item.content}*/}
+            {/*                />*/}
+            {/*            </Skeleton>*/}
+            {/*        </List.Item>*/}
+            {/*    )}*/}
+            {/*/>*/}
             {
-                list.map(item => (
-                    <ReactMarkdown children={item.content} remarkPlugins={[remarkGfm]}/>
-                ))
+                <ChatList datalist={list}/>
             }
             <Search
                 placeholder="input your question"
