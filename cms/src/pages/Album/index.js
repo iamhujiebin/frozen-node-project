@@ -1,4 +1,4 @@
-import {Radio, Button, Space, Divider, Upload, message, Image, Empty} from "antd";
+import {Radio, Button, Space, Divider, Upload, message, Image, Empty, Carousel} from "antd";
 import {UploadOutlined} from '@ant-design/icons';
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
@@ -98,7 +98,7 @@ const Album = () => {
                         preview={{
                             visible: false,
                         }}
-                        width={460}
+                        width={300}
                         src={list[0]}
                         onClick={() => setVisible(true)}
 
@@ -119,21 +119,22 @@ const Album = () => {
                     </div>
                 </div>
             }
-            {/*<Carousel*/}
-            {/*    dotPosition={"top"}*/}
-            {/*    autoplay*/}
-            {/*    autoplaySpeed={3000}*/}
-            {/*    effect={'fade'}*/}
-            {/*>*/}
-            {/*    {*/}
-            {/*        list.map((item, index) => (*/}
-            {/*            <div key={index}>*/}
-            {/*                <img alt={'image' + index} style={contentStyle}*/}
-            {/*                     src={item}/>*/}
-            {/*            </div>*/}
-            {/*        ))*/}
-            {/*    }*/}
-            {/*</Carousel>*/}
+            <Divider/>
+            <Carousel
+                dotPosition={"top"}
+                autoplay
+                autoplaySpeed={3000}
+                effect={'fade'}
+            >
+                {
+                    list.map((item, index) => (
+                        <div key={index}>
+                            <img alt={'image' + index} style={contentStyle}
+                                 src={item}/>
+                        </div>
+                    ))
+                }
+            </Carousel>
         </>
     )
 }
