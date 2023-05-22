@@ -16,7 +16,7 @@ const ChatList = ({datalist}) => {
                                 <img style={{width: "50px", height: "50px"}}
                                      src={item.role === 'user' ? 'https://randomuser.me/api/portraits/men/20.jpg' : 'https://randomuser.me/api/portraits/women/27.jpg'}
                                      alt={""}/>
-                                <span>2006-01-02 15：04：05</span>
+                                <span>{item.createdTime}</span>
                                 <ReactMarkdown children={item.content} remarkPlugins={[remarkGfm]}/>
                                 <Divider/>
                             </div>
