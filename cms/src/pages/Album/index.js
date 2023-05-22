@@ -1,4 +1,4 @@
-import {Radio, Button, Space, Carousel, Divider, Upload, message} from "antd";
+import {Radio, Button, Space, Divider, Upload, message, Image, Empty} from "antd";
 import {UploadOutlined} from '@ant-design/icons';
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
@@ -71,6 +71,7 @@ const Album = () => {
         },
         showUploadList: false,
     }
+    const [visible, setVisible] = useState(false);
     return (
         <>
             <Space direction={"vertical"}>
@@ -83,40 +84,56 @@ const Album = () => {
                 </Space>
                 <Radio.Group value={session} onChange={onSessionChange}>
                     {
-                        sessionList.map(item => (
-                            <Radio.Button value={item}>{"Album" + item}</Radio.Button>
+                        sessionList.map((item, index) => (
+                            <Radio.Button key={index} value={item}>{"Album" + item}</Radio.Button>
                         ))
                     }
                 </Radio.Group>
             </Space>
             <Divider orientation={'left'}></Divider>
-            <Carousel
-                dotPosition={"top"}
-                autoplay
-                autoplaySpeed={3000}
-                effect={'fade'}
-            >
-                {
-                    list.map((item, index) => (
-                        <div>
-                            <img alt={'image' + index} style={contentStyle}
-                                 src={item}/>
-                        </div>
-                    ))
-                }
-                {/*<div>*/}
-                {/*    <img alt={'image1'} style={contentStyle}*/}
-                {/*         src={'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp'}/>*/}
-                {/*</div>*/}
-                {/*<div>*/}
-                {/*    <img alt={'image2'} style={contentStyle}*/}
-                {/*         src={'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp'}/>*/}
-                {/*</div>*/}
-                {/*<div>*/}
-                {/*    <img alt={'image3'} style={contentStyle}*/}
-                {/*         src={'https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp'}/>*/}
-                {/*</div>*/}
-            </Carousel>
+            {list.length === 0 && <Empty/>}
+            {list.length > 0 &&
+                <div style={{marginRight: "auto", marginLeft: "auto"}}>
+                    <Image
+                        preview={{
+                            visible: false,
+                        }}
+                        width={460}
+                        src={list[0]}
+                        onClick={() => setVisible(true)}
+
+                    />
+                    <div
+                        style={{
+                            display: 'none',
+                        }}
+                    >
+                        <Image.PreviewGroup
+                            preview={{
+                                visible,
+                                onVisibleChange: (vis) => setVisible(vis),
+                            }}
+                        >
+                            {list.map(item => <Image src={item}/>)}
+                        </Image.PreviewGroup>
+                    </div>
+                </div>
+            }
+            {/*<Carousel*/}
+            {/*    dotPosition={"top"}*/}
+            {/*    autoplay*/}
+            {/*    autoplaySpeed={3000}*/}
+            {/*    effect={'fade'}*/}
+            {/*>*/}
+            {/*    {*/}
+            {/*        list.map((item, index) => (*/}
+            {/*            <div key={index}>*/}
+            {/*                <img alt={'image' + index} style={contentStyle}*/}
+            {/*                     src={item}/>*/}
+            {/*            </div>*/}
+            {/*        ))*/}
+            {/*    }*/}
+            {/*</Carousel>*/}
         </>
     )
 }

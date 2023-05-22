@@ -62,8 +62,8 @@ const ChatGPT = () => {
                 <Button type="primary" shape="circle" onClick={onDelSession} danger>D</Button>
                 <Radio.Group value={session} onChange={onSessionChange}>
                     {
-                        sessionList.map(item => (
-                            <Radio.Button value={item}>{"Chat" + item}</Radio.Button>
+                        sessionList.map((item, index) => (
+                            <Radio.Button key={index} value={item}>{"Chat" + item}</Radio.Button>
                         ))
                     }
                 </Radio.Group>
