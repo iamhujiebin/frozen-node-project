@@ -1,5 +1,6 @@
 import './index.scss'
-import {Layout, Popconfirm, Menu} from "antd"
+import {Layout, Popconfirm, Menu, message, Drawer, Button, Space, Form, Input, Select} from "antd"
+import demon from '@/assets/chicken.png'
 import {observer} from 'mobx-react-lite'
 import {
     LogoutOutlined,
@@ -13,7 +14,7 @@ import {
 } from '@ant-design/icons'
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {useStore} from '@/store'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 const {Header, Sider} = Layout
 
@@ -77,18 +78,81 @@ const CMSLayout = () => {
             console.error('get user fail', e)
         }
     }, [userStore])
+    const [open, setOpen] = useState(false);
+    const showDrawer = () => {
+        setOpen(true);
+    };
+    const onClose = () => {
+        setOpen(false);
+    };
+    const onSubmit = (value) => {
+        console.log(value)
+    }
     return (
         <Layout>
             <Header className="header">
                 <div className="logo"></div>
                 <div className="user-info">
+                    <img alt={"avatar"} src={demon} width={45} height={45} onClick={showDrawer}
+                         style={{
+                             "backgroundColor": "#f0f0f0",
+                             "borderRadius": "10px",
+                             "marginRight": "5px",
+                             "cursor": 'pointer',
+                         }}
+                    />
                     <span className="user-name">{userStore.userInfo.name}</span>
                     <span className="user-logout">
-            <Popconfirm title='是否确认退出?' okText='退出' cancelText='取消' onConfirm={onLogout}>
-              <LogoutOutlined/> 退出
-            </Popconfirm>
-          </span>
+                        <Popconfirm title='是否确认退出?' okText='退出' cancelText='取消' onConfirm={onLogout}>
+                            <LogoutOutlined/> 退出
+                        </Popconfirm>
+                    </span>
                 </div>
+                {/*抽屉打开User信息页面*/}
+                <Drawer
+                    title="Modify your account"
+                    width={560}
+                    onClose={onClose}
+                    open={open}
+                    bodyStyle={{
+                        paddingBottom: 80,
+                    }}
+                    extra={
+                        <Space>
+                            <Button onClick={onClose}>Cancel</Button>
+                            <Button onClick={onSubmit} type="primary">Submit</Button>
+                        </Space>
+                    }
+                >
+                    <Form layout="vertical" initialValues={{"name": userStore.userInfo.name, "gender": "male"}}>
+                        <Form.Item
+                            name="name"
+                            label="Name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please enter user name',
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Please enter user name"/>
+                        </Form.Item>
+                        <Form.Item
+                            name="gender"
+                            label="Gender"
+                            rules={[{required: true}]}
+                        >
+                            <Select
+                                placeholder="Your Gender"
+                                allowClear
+                            >
+                                <Select.Option value="male">male</Select.Option>
+                                <Select.Option value="female">female</Select.Option>
+                                <Select.Option value="other">other</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Form>
+                </Drawer>
             </Header>
             <Layout>
                 <Sider

@@ -1,3 +1,4 @@
+import "./index.scss"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {Divider, Empty} from "antd";
@@ -10,10 +11,11 @@ const ChatList = ({datalist}) => {
         return (
             <div style={{border: "inset"}}>
                 {
-                    datalist.map(item => {
+                    datalist.map((item, index) => {
                         return (
-                            <div style={item.role === 'user' ? userStyle : assistantStyle}>
-                                <img style={{width: "50px", height: "50px"}}
+                            <div key={index} style={item.role === 'user' ? userStyle : assistantStyle}>
+                                {/*<img style={{width: "50px", height: "50px"}}*/}
+                                <img className={"avatar"}
                                      src={item.role === 'user' ? 'https://randomuser.me/api/portraits/men/20.jpg' : 'https://randomuser.me/api/portraits/women/27.jpg'}
                                      alt={""}/>
                                 <span>{item.createdTime}</span>
