@@ -1,7 +1,7 @@
 import "./index.scss"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import {Divider, Empty} from "antd";
+import {Divider, Empty, Space} from "antd";
 import {useStore} from '@/store'
 
 import chicken from "@/assets/chicken.png"
@@ -10,37 +10,50 @@ import woman from "@/assets/woman.png"
 import chatgpt from "@/assets/chatgpt.jpg"
 import {observer} from "mobx-react-lite";
 
-const userStyle = {textAlign: "right"}
-const assistantStyle = {textAlign: "left"}
-
 const ChatList = ({datalist}) => {
     const {userStore} = useStore()
     if (datalist.length > 0) {
-        return (
-            <div style={{border: "inset"}}>
-                {
-                    datalist.map((item, index) => {
-                        return (
-                            <div key={index} style={item.role === 'user' ? userStyle : assistantStyle}>
-                                {/*<img style={{width: "50px", height: "50px"}}*/}
-                                <img className={"avatar"}
-                                     src={item.role === 'user' ?
-                                         userStore.userInfo.gender === 1 ? man : userStore.userInfo.gender === 2 ? woman : chicken
-                                         : chatgpt}
-                                     alt={""}/>
-                                <span>{item.createdTime}</span>
-                                <ReactMarkdown children={item.content} remarkPlugins={[remarkGfm]}/>
-                                <Divider/>
-                            </div>
-                        )
-                    })
+        return (<div style={{border: "inset", padding: "2px"}}>
+            {datalist.map((item, index) => {
+                if (item.role === 'user') {
+                    return (<div key={index} style={{textAlign: "right"}}>
+                        <Space>
+                            <Space direction={"vertical"} size={1}>
+                                <Space>
+                                    <span>{item.createdTime}</span>
+                                </Space>
+                                <Space>
+                                    <ReactMarkdown className={"chat"} children={item.content}
+                                                   remarkPlugins={[remarkGfm]}/>
+                                </Space>
+                            </Space>
+                            <img className={"avatar"}
+                                 src={userStore.userInfo.gender === 1 ? man : userStore.userInfo.gender === 2 ? woman : chicken}
+                                 alt={""}/>
+                        </Space>
+                        <Divider/>
+                    </div>)
                 }
-            </div>
-        )
+                // assistant
+                return (
+                    <div key={index} style={{textAlign: "left"}}>
+                        <Space>
+                            <img className={"avatar"}
+                                 src={chatgpt}
+                                 alt={""}/>
+                            <Space direction={"vertical"} size={1}>
+                                <span>{item.createdTime}</span>
+                                <ReactMarkdown className={"chat"} children={item.content}
+                                               remarkPlugins={[remarkGfm]}/>
+                            </Space>
+                        </Space>
+                        <Divider/>
+                    </div>
+                )
+            })}
+        </div>)
     }
-    return (
-        <Empty/>
-    )
+    return (<Empty/>)
 }
 
 export default observer(ChatList) // mobx 的数据监听,userStore中的任何数据变化都会重新渲染
