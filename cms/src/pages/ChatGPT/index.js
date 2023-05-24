@@ -31,8 +31,13 @@ const ChatGPT = () => {
     }
     const onDelSession = e => {
         http.delete("/chatgpt/session/del/" + session).then(r => {
-            setSession(0)
-            setSessionList(sessionList.filter(item => item !== session))
+            const newSessionList = sessionList.filter(item => item !== session)
+            setSessionList(newSessionList)
+            if (newSessionList.length > 0) {
+                setSession(newSessionList[newSessionList.length - 1])
+            } else {
+                setSession(0)
+            }
         }).catch(e => message.error("fail").then())
     }
     const onSessionChange = e => {
