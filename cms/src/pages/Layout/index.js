@@ -1,6 +1,8 @@
 import './index.scss'
 import {Layout, Popconfirm, Menu, message, Drawer, Button, Space, Form, Input, Select} from "antd"
-import demon from '@/assets/chicken.png'
+import chicken from '@/assets/chicken.png'
+import man from '@/assets/man.png'
+import woman from '@/assets/woman.png'
 import {observer} from 'mobx-react-lite'
 import {
     LogoutOutlined,
@@ -71,14 +73,13 @@ const CMSLayout = () => {
         navigate('/login')
     }
     useEffect(() => {
-        // 用axios包就要try包住，非200就会走到catch
-        try {
-            userStore.getUserInfo()
-        } catch (e) {
-            console.error('get user fail', e)
-        }
+        userStore.getUserInfo().then(r => {
+        }).catch(e => {
+            alert(e)
+        })
     }, [userStore])
     const [open, setOpen] = useState(false);
+    const [form] = Form.useForm();
     const showDrawer = () => {
         setOpen(true);
     };
@@ -86,14 +87,24 @@ const CMSLayout = () => {
         setOpen(false);
     };
     const onSubmit = (value) => {
-        console.log(value)
+        // console.log(form.getFieldValue("name"), form.getFieldValue("gender"))
+        const name = form.getFieldValue("name")
+        const gender = form.getFieldValue("gender")
+        const success = userStore.updateUserInfo(name, gender)
+        if (success) {
+            setOpen(false) // 关闭抽屉
+        } else {
+            message.error("update fail")
+        }
     }
     return (
         <Layout>
             <Header className="header">
                 <div className="logo"></div>
                 <div className="user-info">
-                    <img alt={"avatar"} src={demon} width={45} height={45} onClick={showDrawer}
+                    <img alt={"avatar"}
+                         src={userStore.userInfo.gender === 1 ? man : userStore.userInfo.gender === 2 ? woman : chicken}
+                         width={45} height={45} onClick={showDrawer}
                          style={{
                              "backgroundColor": "#f0f0f0",
                              "borderRadius": "10px",
@@ -124,7 +135,10 @@ const CMSLayout = () => {
                         </Space>
                     }
                 >
-                    <Form layout="vertical" initialValues={{"name": userStore.userInfo.name, "gender": "male"}}>
+                    <Form
+                        layout="vertical"
+                        form={form}
+                        initialValues={{"name": userStore.userInfo.name, "gender": "male"}}>
                         <Form.Item
                             name="name"
                             label="Name"
