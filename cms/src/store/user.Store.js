@@ -1,7 +1,7 @@
 import {http} from "@/utils"
+
 import {setUser} from "@/utils/token"
 import {makeAutoObservable} from "mobx"
-import {message} from "antd";
 
 class UserStore {
     constructor() {

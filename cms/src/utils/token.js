@@ -8,4 +8,4 @@ const clearToken = () => localStorage.removeItem(TOKEN_KEY)
 const setUser = (user) => localStorage.setItem(USER_KEY, user)
 const getUser = () => localStorage.getItem(USER_KEY)
 
-export { getToken, setToken, clearToken, setUser, getUser }
+export {getToken, setToken, clearToken, setUser, getUser}
