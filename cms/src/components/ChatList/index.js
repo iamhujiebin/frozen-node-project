@@ -9,6 +9,7 @@ import woman from "@/assets/woman.png"
 import chatgpt from "@/assets/chatgpt.jpg"
 import {observer} from "mobx-react-lite";
 import {useEffect, useRef} from "react";
+import MarkdownPreview from '@uiw/react-markdown-preview';
 
 const ChatList = ({datalist}) => {
     const {userStore} = useStore()
@@ -32,8 +33,9 @@ const ChatList = ({datalist}) => {
                                         <span>{item.createdTime}</span>
                                     </Space>
                                     <Space>
-                                        <ReactMarkdown className={"chat"} children={item.content}
-                                                       remarkPlugins={[remarkGfm]}/>
+                                        {/*<ReactMarkdown className={"chat"} children={item.content}*/}
+                                        {/*               remarkPlugins={[remarkGfm]}/>*/}
+                                        <MarkdownPreview className={"chat"} source={item.content}/>
                                     </Space>
                                 </Space>
                                 <img className={"avatar"}
@@ -52,8 +54,9 @@ const ChatList = ({datalist}) => {
                                      alt={""}/>
                                 <Space direction={"vertical"} size={1}>
                                     <span>{item.createdTime}</span>
-                                    <ReactMarkdown className={"chat"} children={item.content}
-                                                   remarkPlugins={[remarkGfm]}/>
+                                    {/*<ReactMarkdown className={"chat"} children={item.content}*/}
+                                    {/*               remarkPlugins={[remarkGfm]}/>*/}
+                                    <MarkdownPreview className={"chat"} source={item.content}/>
                                 </Space>
                             </Space>
                             <Divider/>

@@ -1,29 +1,19 @@
-import {Carousel} from "antd";
+import MarkdownPreview from '@uiw/react-markdown-preview';
 
-const contentStyle = {
-    height: '160px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
-};
+const source = `
+有一些不是markdown
+## MarkdownPreview
 
-const Test = () => {
+> todo: React component preview markdown text.
+~~~js\n console.log(1)\n~~~
+~~~go\n fmt.Println("123")\n~~~
+
+有一些就是
+`;
+
+function Test() {
     return (
-        <Carousel autoplay effect={'fade'}>
-            <div>
-                <h3 style={contentStyle}>1</h3>
-            </div>
-            <div>
-                <h3 style={contentStyle}>2</h3>
-            </div>
-            <div>
-                <h3 style={contentStyle}>3</h3>
-            </div>
-            <div>
-                <h3 style={contentStyle}>4</h3>
-            </div>
-        </Carousel>
+        <MarkdownPreview source={source}/>
     )
 }
 
