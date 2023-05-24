@@ -1,6 +1,4 @@
 import "./index.scss"
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import {Divider, Empty, Space} from "antd";
 import {useStore} from '@/store'
 import chicken from "@/assets/chicken.png"
@@ -33,8 +31,6 @@ const ChatList = ({datalist}) => {
                                         <span>{item.createdTime}</span>
                                     </Space>
                                     <Space>
-                                        {/*<ReactMarkdown className={"chat"} children={item.content}*/}
-                                        {/*               remarkPlugins={[remarkGfm]}/>*/}
                                         <MarkdownPreview className={"chat"} source={item.content}/>
                                     </Space>
                                 </Space>
@@ -54,8 +50,6 @@ const ChatList = ({datalist}) => {
                                      alt={""}/>
                                 <Space direction={"vertical"} size={1}>
                                     <span>{item.createdTime}</span>
-                                    {/*<ReactMarkdown className={"chat"} children={item.content}*/}
-                                    {/*               remarkPlugins={[remarkGfm]}/>*/}
                                     <MarkdownPreview className={"chat"} source={item.content}/>
                                 </Space>
                             </Space>
