@@ -16,7 +16,7 @@ import {
     Drawer,
     message
 } from "antd";
-import {BrowserView, MobileView, isBrowser, isMobile} from 'react-device-detect'
+import {isMobile} from 'react-device-detect'
 import {SearchOutlined, MenuOutlined} from "@ant-design/icons"
 import React, {useEffect, useState, useRef} from "react";
 import {DndContext} from '@dnd-kit/core';

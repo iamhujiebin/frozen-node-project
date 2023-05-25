@@ -10,7 +10,7 @@ function Todo() {
         todoStore.getMyTodo().then(r => {
             console.log(process.env)
         })
-    }, [])
+    }, [todoStore])
     const singleCheck = (id, e) => {
         todoStore.singleCheck(id, e.target.checked)
     }

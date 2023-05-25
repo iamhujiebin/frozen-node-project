@@ -1,7 +1,6 @@
-import {Avatar, Input, List, Skeleton, Radio, Button, Space, message} from "antd";
+import {Input, Radio, Button, Space, message} from "antd";
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
-import Chat from "@/components/ChatList";
 import ChatList from "@/components/ChatList";
 
 const {Search} = Input;
