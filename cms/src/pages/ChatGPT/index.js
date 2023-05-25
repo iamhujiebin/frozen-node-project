@@ -13,6 +13,12 @@ const ChatGPT = () => {
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
     useEffect(() => {
+        document.body.style.overflow = "hidden" // 防止移动端下拉刷新。进入页面时给body添加行类样式 overflow:hidden
+        return () => {
+            document.body.style.overflow = "visible" //离开页面时给body还原 overflow 为默认值
+        }
+    }, [])
+    useEffect(() => {
         http.get("chatgpt/session/list").then(r => {
             setSessionList(r.data)
         }).catch(e => message.error("fail").then())
