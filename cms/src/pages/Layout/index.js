@@ -17,6 +17,7 @@ import {
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {useStore} from '@/store'
 import React, {useEffect, useState} from 'react'
+import {isMobile} from 'react-device-detect'
 
 const {Header, Sider} = Layout
 
@@ -63,11 +64,17 @@ const CMSLayout = () => {
             label: (<Link to='/antddemo'>antddemo</Link>)
         }
     ]
+    let siderWidth = 200
+    let initCollapsed = false
+    if (isMobile) {
+        siderWidth = 60
+        initCollapsed = true
+    }
     const location = useLocation()
     const selectedKey = location.pathname
     const {userStore, loginStore} = useStore()
     const navigate = useNavigate()
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed, setCollapsed] = useState(initCollapsed)
     const onLogout = () => {
         loginStore.logout()
         navigate('/login')
@@ -170,12 +177,15 @@ const CMSLayout = () => {
             </Header>
             <Layout>
                 <Sider
+                    width={siderWidth}
                     collapsible
                     collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
-                    // collapsedWidth="0" // 这里是折叠后特殊样式
+                    collapsedWidth="0" // 这里是折叠后特殊样式
                     zeroWidthTriggerStyle={{
-                        right: "-50px",
+                        right: "-60px",
                         bottom: "-15px",
+                        backgroundColor: "transparent",
+                        color: "black",
                     }}
                 >
                     <Menu

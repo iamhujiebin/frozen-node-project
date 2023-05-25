@@ -50,7 +50,8 @@ const ChatList = ({datalist}) => {
                                      alt={""}/>
                                 <Space direction={"vertical"} size={1}>
                                     <span>{item.createdTime}</span>
-                                    <MarkdownPreview className={"chat"} source={item.content}/>
+                                    <MarkdownPreview wrapperElement={{"data-color-mode": "light"}} className={"chat"}
+                                                     source={item.content}/>
                                 </Space>
                             </Space>
                             <Divider/>

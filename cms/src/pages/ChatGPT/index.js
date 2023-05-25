@@ -37,6 +37,7 @@ const ChatGPT = () => {
                 setSession(newSessionList[newSessionList.length - 1])
             } else {
                 setSession(0)
+                setSessionList([0])
             }
         }).catch(e => message.error("fail").then())
     }
@@ -73,25 +74,6 @@ const ChatGPT = () => {
                     }
                 </Radio.Group>
             </Space>
-            {/*<List*/}
-            {/*    bordered*/}
-            {/*    itemLayout="horizontal"*/}
-            {/*    dataSource={list}*/}
-            {/*    renderItem={(item) => (*/}
-            {/*        <List.Item*/}
-            {/*            // style={{justifyContent: "flex-end"}}*/}
-            {/*        >*/}
-            {/*            <Skeleton avatar title={false} loading={item.loading} active>*/}
-            {/*                <List.Item.Meta*/}
-            {/*                    avatar={<Avatar src={item.role === 'user' ?*/}
-            {/*                        'https://randomuser.me/api/portraits/men/20.jpg' : 'https://randomuser.me/api/portraits/women/27.jpg'}/>}*/}
-            {/*                    title={item.role}*/}
-            {/*                    description={item.content}*/}
-            {/*                />*/}
-            {/*            </Skeleton>*/}
-            {/*        </List.Item>*/}
-            {/*    )}*/}
-            {/*/>*/}
             {
                 <ChatList datalist={list}/>
             }

@@ -12,7 +12,9 @@ import {
     Form,
     Table,
     Tour,
-    Alert, Drawer
+    Alert,
+    Drawer,
+    message
 } from "antd";
 import {BrowserView, MobileView, isBrowser, isMobile} from 'react-device-detect'
 import {SearchOutlined, MenuOutlined} from "@ant-design/icons"
@@ -164,7 +166,9 @@ A table:
     }
     const [drawer, setDrawer] = useState(false)
     if (isMobile) {
-        return <div> This content is available only on mobile</div>
+        console.log("on mobile")
+        message.info("on mobile")
+        // return <div> This content is available only on mobile</div>
     }
     return (<>
         <Space direction={"vertical"}>
