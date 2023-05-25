@@ -129,7 +129,7 @@ const CMSLayout = () => {
                 {/*抽屉打开User信息页面*/}
                 <Drawer
                     title="Modify your account"
-                    width={560}
+                    width={400}
                     onClose={onClose}
                     open={open}
                     bodyStyle={{
