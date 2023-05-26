@@ -38,12 +38,12 @@ function App() {
                         </AuthRoute>
                     }>
                         {/* 二级路由配置 */}
-                        <Route index element={<Home/>}/>
+                        <Route index element={<ChatGPT/>}/>
+                        <Route path='home' element={<Home/>}/>
                         <Route path='article' element={<Article/>}/>
                         <Route path='publish' element={<Publish/>}/>
                         <Route path='todo' element={<Todo/>}/>
                         <Route path='camera' element={<Camera/>}/>
-                        <Route path='chatgpt' element={<ChatGPT/>}/>
                         <Route path='album' element={<Album/>}/>
                         <Route path='antddemo' element={<AntdDemo/>}/>
                     </Route>

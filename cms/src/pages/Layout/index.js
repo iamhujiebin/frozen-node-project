@@ -24,8 +24,8 @@ const {Header, Sider} = Layout
 const CMSLayout = () => {
     const MenuList = [
         {
-            key: '/',
-            label: (<Link to='/'>数据概览</Link>),
+            key: '/home',
+            label: (<Link to='/home'>数据概览</Link>),
             icon: <HomeOutlined/>
         },
         {
@@ -54,9 +54,9 @@ const CMSLayout = () => {
             label: (<Link to='/album'>相册</Link>),
         },
         {
-            key: '/chatgpt',
+            key: '/',
             icon: <RedditCircleFilled/>,
-            label: (<Link to='/chatgpt'>ChatGPT</Link>),
+            label: (<Link to='/'>ChatGPT</Link>),
         },
         {
             key: '/antddemo',
