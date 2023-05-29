@@ -4,6 +4,7 @@ import './index.scss'
 import {useStore} from '@/store'
 import {useNavigate} from 'react-router-dom'
 import {isMobile} from "react-device-detect";
+import {getCode, setCode, getMobile, setMobile} from "@/utils"
 
 const Login = () => {
     let loginStyle = "login-container"
@@ -17,6 +18,8 @@ const Login = () => {
         const {mobile, code} = data
         try {
             await loginStore.login({mobile, code})
+            setMobile(mobile)
+            setCode(code)
             message.success('登录成功')
             navigate('/') // 登录成功跳转 根路径
         } catch (e) {
@@ -34,8 +37,8 @@ const Login = () => {
                     validateTrigger={['onBlur', 'onChange']}
                     onFinish={onFinish}
                     initialValues={{
-                        mobile: '13660677198',
-                        code: '677198'
+                        mobile: getMobile() ? getMobile() : '13660677198',
+                        code: getCode() ? getCode() : '677198',
                     }}
                 >
                     <Form.Item
