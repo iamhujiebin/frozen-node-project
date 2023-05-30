@@ -37,7 +37,7 @@ const Login = () => {
                     validateTrigger={['onBlur', 'onChange']}
                     onFinish={onFinish}
                     initialValues={{
-                        mobile: getMobile() ? getMobile() : '13660677198',
+                        mobile: getMobile() ? getMobile() : '',
                         code: getCode() ? getCode() : '',
                     }}
                 >
