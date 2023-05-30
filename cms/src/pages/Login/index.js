@@ -24,7 +24,7 @@ const Login = () => {
             navigate('/') // 登录成功跳转 根路径
         } catch (e) {
             console.log('err?', e)
-            message.error(e.response?.data?.message || '登录失败') // 这么牛逼的写法
+            message.error(e.response?.data?.message || '手机号后六位') // 这么牛逼的写法
         }
     }
     return (
