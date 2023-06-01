@@ -35,7 +35,7 @@ const ChatGPT = () => {
             closeWebSocket()
             PubSub.unsubscribe(messageSocket);
         }
-    }, [])
+    })
     useEffect(() => {
         document.body.style.overflow = "hidden" // 防止移动端下拉刷新。进入页面时给body添加行类样式 overflow:hidden
         return () => {
