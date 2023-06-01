@@ -2,6 +2,7 @@ import {Input, Radio, Button, Space, message} from "antd";
 import {useState, useEffect} from "react";
 import {http} from "@/utils";
 import ChatList from "@/components/ChatList";
+import {PubSub} from "pubsub-js";
 
 const {Search} = Input;
 
@@ -11,6 +12,23 @@ const ChatGPT = () => {
     const [msg, setMsg] = useState('')
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
+    useEffect(() => {
+        //订阅 'message' 发布的发布的消息
+        let messageSocket = PubSub.subscribe('message', function (topic, message) {
+            //message 为接收到的消息
+            // 重新加载消息列表
+            if (message === "NEW_MSG") {
+                http.get("/chatgpt/session/detail/" + session).then(r => {
+                    const newList = r.data?.messages ? r.data.messages : []
+                    setList(newList)
+                }).catch(e => message.error("fail").then())
+            }
+        })
+        //卸载组件 取消订阅
+        return () => {
+            PubSub.unsubscribe(messageSocket);
+        }
+    })
     useEffect(() => {
         document.body.style.overflow = "hidden" // 防止移动端下拉刷新。进入页面时给body添加行类样式 overflow:hidden
         return () => {
