@@ -1,8 +1,9 @@
 import {Input, Radio, Button, Space, message} from "antd";
 import {useState, useEffect} from "react";
-import {http} from "@/utils";
+import {getToken, http} from "@/utils";
 import ChatList from "@/components/ChatList";
 import {PubSub} from "pubsub-js";
+import {createWebSocket, closeWebSocket} from "@/components/WebSocket";
 
 const {Search} = Input;
 
@@ -14,6 +15,10 @@ const ChatGPT = () => {
     const [sessionList, setSessionList] = useState([0])
     useEffect(() => {
         console.log("listening to message")
+        // 创建websocket
+        const access_token = getToken()
+        const url = `${process.env.REACT_APP_WS_URL}/${access_token}`
+        createWebSocket(url)
         //订阅 'message' 发布的发布的消息
         let messageSocket = PubSub.subscribe('message', function (topic, message) {
             //message 为接收到的消息
@@ -27,6 +32,7 @@ const ChatGPT = () => {
         })
         //卸载组件 取消订阅
         return () => {
+            closeWebSocket()
             PubSub.unsubscribe(messageSocket);
         }
     }, [])
