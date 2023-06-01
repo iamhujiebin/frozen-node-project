@@ -13,6 +13,7 @@ const ChatGPT = () => {
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
     useEffect(() => {
+        console.log("listening to message")
         //订阅 'message' 发布的发布的消息
         let messageSocket = PubSub.subscribe('message', function (topic, message) {
             //message 为接收到的消息
@@ -28,7 +29,7 @@ const ChatGPT = () => {
         return () => {
             PubSub.unsubscribe(messageSocket);
         }
-    })
+    }, [])
     useEffect(() => {
         document.body.style.overflow = "hidden" // 防止移动端下拉刷新。进入页面时给body添加行类样式 overflow:hidden
         return () => {
@@ -74,8 +75,7 @@ const ChatGPT = () => {
         const newList = [...list, {role: "user", content: values}]
         setList(newList)
         http.post("/chatgpt/process", {
-            "session_id": session,
-            "messages": newList
+            "session_id": session, "messages": newList
         }).then(r => {
             const newList = r.data.messages
             setList(newList)
@@ -84,32 +84,25 @@ const ChatGPT = () => {
         })
         setMsg('')
     }
-    return (
-        <>
-            <Space>
-                <Button type="primary" shape="circle" onClick={onAddSession}>A</Button>
-                <Button type="primary" shape="circle" onClick={onDelSession} danger>D</Button>
-                <Radio.Group value={session} onChange={onSessionChange}>
-                    {
-                        sessionList.map((item, index) => (
-                            <Radio.Button key={index} value={item}>{"Chat" + item}</Radio.Button>
-                        ))
-                    }
-                </Radio.Group>
-            </Space>
-            {
-                <ChatList datalist={list}/>
-            }
-            <Search
-                placeholder="input your question"
-                size="large"
-                enterButton="Ask Ai"
-                value={msg}
-                onSearch={onFinish}
-                onChange={handleChange}
-            />
-        </>
-    )
+    return (<>
+        <Space>
+            <Button type="primary" shape="circle" onClick={onAddSession}>A</Button>
+            <Button type="primary" shape="circle" onClick={onDelSession} danger>D</Button>
+            <Radio.Group value={session} onChange={onSessionChange}>
+                {sessionList.map((item, index) => (
+                    <Radio.Button key={index} value={item}>{"Chat" + item}</Radio.Button>))}
+            </Radio.Group>
+        </Space>
+        {<ChatList datalist={list}/>}
+        <Search
+            placeholder="input your question"
+            size="large"
+            enterButton="Ask Ai"
+            value={msg}
+            onSearch={onFinish}
+            onChange={handleChange}
+        />
+    </>)
 }
 
 export default ChatGPT
