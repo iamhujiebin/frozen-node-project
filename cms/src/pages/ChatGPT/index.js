@@ -23,19 +23,22 @@ const ChatGPT = () => {
             closeWebSocket()
         }
     }, [])
+    let messageSocket = null
     useEffect(() => {
         console.log("listening to message")
         //订阅 'message' 发布的发布的消息
-        let messageSocket = PubSub.subscribe('message', function (topic, message) {
-            //message 为接收到的消息
-            // 重新加载消息列表
-            if (message === "NEW_MSG") {
-                http.get("/chatgpt/session/detail/" + session).then(r => {
-                    const newList = r.data?.messages ? r.data.messages : []
-                    setList(newList)
-                }).catch(e => message.error("fail").then())
-            }
-        })
+        if (!messageSocket) {
+            let messageSocket = PubSub.subscribe('message', function (topic, message) {
+                //message 为接收到的消息
+                // 重新加载消息列表
+                if (message === "NEW_MSG") {
+                    http.get("/chatgpt/session/detail/" + session).then(r => {
+                        const newList = r.data?.messages ? r.data.messages : []
+                        setList(newList)
+                    }).catch(e => message.error("fail").then())
+                }
+            })
+        }
         //卸载组件 取消订阅
         return () => {
             PubSub.unsubscribe(messageSocket);
