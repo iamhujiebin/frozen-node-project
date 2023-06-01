@@ -28,7 +28,7 @@ const ChatGPT = () => {
         console.log("listening to message")
         //订阅 'message' 发布的发布的消息
         if (!messageSocket) {
-            let messageSocket = PubSub.subscribe('message', function (topic, message) {
+            messageSocket = PubSub.subscribe('message', function (topic, message) {
                 //message 为接收到的消息
                 // 重新加载消息列表
                 if (message === "NEW_MSG") {
