@@ -14,11 +14,17 @@ const ChatGPT = () => {
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
     useEffect(() => {
-        console.log("listening to message")
         // 创建websocket
         const access_token = getToken()
         const url = `${process.env.REACT_APP_WS_URL}/${access_token}`
         createWebSocket(url)
+        return () => {
+            //卸载组件
+            closeWebSocket()
+        }
+    }, [])
+    useEffect(() => {
+        console.log("listening to message")
         //订阅 'message' 发布的发布的消息
         let messageSocket = PubSub.subscribe('message', function (topic, message) {
             //message 为接收到的消息
@@ -32,7 +38,6 @@ const ChatGPT = () => {
         })
         //卸载组件 取消订阅
         return () => {
-            closeWebSocket()
             PubSub.unsubscribe(messageSocket);
         }
     })
