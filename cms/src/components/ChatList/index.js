@@ -18,9 +18,8 @@ const ChatList = ({datalist}) => {
             chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
     }, [datalist]);
-    const copyText = (id) => {
-        const text = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(text);
+    const copyText = (content) => {
+        navigator.clipboard.writeText(content);
         alert("文本已复制到剪贴板。");
     }
     if (datalist.length > 0) {
@@ -56,8 +55,7 @@ const ChatList = ({datalist}) => {
                                      alt={""}/>
                                 <Space direction={"vertical"} size={1}>
                                     <span>{item.createdTime}</span>
-                                    <CopyOutlined onClick={() => copyText(`text_${index}`)}/>
-                                    <p id={`text_${index}`} style={{display: "none"}}>{item.content}</p>
+                                    <CopyOutlined onClick={() => copyText(item.content)}/>
                                     <MarkdownPreview wrapperElement={{"data-color-mode": "light"}}
                                                      className={"chat"}
                                                      source={item.content}/>
