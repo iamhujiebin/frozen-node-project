@@ -8,6 +8,7 @@ import chatgpt from "@/assets/chatgpt.jpg"
 import {observer} from "mobx-react-lite";
 import {useEffect, useRef} from "react";
 import MarkdownPreview from '@uiw/react-markdown-preview';
+import {CopyOutlined} from '@ant-design/icons'
 
 const ChatList = ({datalist}) => {
     const {userStore} = useStore()
@@ -17,6 +18,11 @@ const ChatList = ({datalist}) => {
             chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
     }, [datalist]);
+    const copyText = (id) => {
+        const text = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(text);
+        alert("文本已复制到剪贴板。");
+    }
     if (datalist.length > 0) {
         return (
             <div className={"box"}
@@ -50,7 +56,10 @@ const ChatList = ({datalist}) => {
                                      alt={""}/>
                                 <Space direction={"vertical"} size={1}>
                                     <span>{item.createdTime}</span>
-                                    <MarkdownPreview wrapperElement={{"data-color-mode": "light"}} className={"chat"}
+                                    <CopyOutlined onClick={() => copyText(`text_${index}`)}/>
+                                    <p id={`text_${index}`} style={{display: "none"}}>{item.content}</p>
+                                    <MarkdownPreview wrapperElement={{"data-color-mode": "light"}}
+                                                     className={"chat"}
                                                      source={item.content}/>
                                 </Space>
                             </Space>
