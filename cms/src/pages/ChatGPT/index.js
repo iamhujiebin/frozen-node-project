@@ -37,6 +37,11 @@ const ChatGPT = () => {
                         setList(newList)
                     }).catch(e => message.error("fail").then())
                 }
+                if (message === "NEW_SESSION") {
+                    http.get("chatgpt/session/list").then(r => {
+                        setSessionList(r.data)
+                    }).catch(e => message.error("fail").then())
+                }
             })
         }
         //卸载组件 取消订阅
