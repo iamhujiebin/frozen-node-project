@@ -116,7 +116,7 @@ const Music = () => {
     }
     return (
         <>
-            <Drawer title="Basic Drawer" placement="right" onClose={onClose} open={open}>
+            <Drawer title="音乐清单" placement="right" onClose={onClose} open={open}>
                 {
                     MusicList.map((item, index) => (
                         <p className={'pick'} key={index}
