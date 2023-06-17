@@ -62,7 +62,7 @@ const CMSLayout = () => {
         {
             key: '/music',
             icon: <ForwardOutlined/>,
-            label: (<Link to='/music'>music</Link>)
+            label: (<Link to='/music'>音乐馆</Link>)
         },
         {
             key: '/antddemo',

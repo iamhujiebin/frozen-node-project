@@ -1,4 +1,4 @@
-import {Row, Col} from 'antd';
+import {Row, Col, Button, Drawer} from 'antd';
 import ReactPlayer from "react-player";
 import {MusicList} from "./musicList";
 import "./index.scss"
@@ -20,10 +20,17 @@ const reactPlayerStyle = {
 };
 
 const Music = () => {
-    const currentMusic = MusicList[1]
-    const lyric = currentMusic.lyric
+    const [musicId, setMusicId] = useState(0)
+    const lyric = MusicList[musicId].lyric
     const [currentLyric, setCurrentLyric] = useState([])
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
+    const [open, setOpen] = useState(false);
+    const showDrawer = () => {
+        setOpen(true);
+    };
+    const onClose = () => {
+        setOpen(false);
+    };
     const handleReady = () => {
         console.log("视频准备就绪")
     }
@@ -43,6 +50,24 @@ const Music = () => {
     const handleProgress = (e) => {
         console.log(e)
         getCurrentLyric(e.playedSeconds)
+    }
+    const nextSong = () => {
+        let nextId = musicId + 1
+        if (nextId >= MusicList.length) {
+            nextId = 0
+        }
+        setMusicId(nextId)
+    }
+    const previousSong = () => {
+        let nextId = musicId - 1
+        if (nextId < 0) {
+            nextId = MusicList.length - 1
+        }
+        setMusicId(nextId)
+    }
+    const chooseSong = (id) => {
+        setMusicId(id)
+        setOpen(false)
     }
     const formatTime = (value) => {
         const minArray = value.toString().split(':');
@@ -86,23 +111,30 @@ const Music = () => {
         if (nextLyric) {
             currentLyrics.push(nextLyric);
         }
-        console.log("currentLyrics:", currentLyrics)
         setCurrentLyric(currentLyrics)
         setMatchTimeIndex(matchedTimeIndexArray)
     }
     return (
         <>
+            <Drawer title="Basic Drawer" placement="right" onClose={onClose} open={open}>
+                {
+                    MusicList.map((item, index) => (
+                        <p className={'pick'} key={index}
+                           onClick={() => chooseSong(item.id)}>{item.title}</p>
+                    ))
+                }
+            </Drawer>
             <div className='show-component'>
                 <div>
                     <Row justify='center' type='flex'>
                         <Col className='music-cover music-cover-vertical'>
-                            <img src={currentMusic.cover}/>
+                            <img src={MusicList[musicId].cover}/>
                         </Col>
                     </Row>
                     <Row justify='center' type='flex' className='text-center'>
                         <Col className='music-info music-info-vertical'>
-                            <h1>{currentMusic.title}</h1>
-                            <h2>{currentMusic.singer}</h2>
+                            <h1>{MusicList[musicId].title}</h1>
+                            <h2>{MusicList[musicId].singer}</h2>
                         </Col>
                     </Row>
                     {currentLyric.map((item, index) => (
@@ -115,8 +147,9 @@ const Music = () => {
                     ))}
                     <Row justify='center' type='flex' className='text-center'>
                         <ReactPlayer
+                            height={'auto'}
                             config={reactPlayerStyle}
-                            url={currentMusic.url}
+                            url={MusicList[musicId].url}
                             playing={false}
                             loop={true}
                             controls={true}
@@ -127,6 +160,11 @@ const Music = () => {
                             onEnded={handleEnded}
                             onProgress={(e) => handleProgress(e)}
                         />
+                    </Row>
+                    <Row justify='center' type='flex'>
+                        <Button onClick={previousSong}>上一首</Button>
+                        <Button onClick={nextSong}>下一首</Button>
+                        <Button onClick={showDrawer}>选歌</Button>
                     </Row>
                 </div>
             </div>

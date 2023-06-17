@@ -46,3 +46,8 @@
   opacity: 0.5;
   filter: alpha(opacity=50);
 }
+
+.pick:hover {
+  background-color: #00b0ff;
+  cursor: pointer;
+}
