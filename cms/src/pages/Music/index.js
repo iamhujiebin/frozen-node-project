@@ -25,6 +25,7 @@ const Music = () => {
     const [currentLyric, setCurrentLyric] = useState([])
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
     const [open, setOpen] = useState(false);
+    const [playing, setPlaying] = useState(false)
     const showDrawer = () => {
         setOpen(true);
     };
@@ -36,7 +37,7 @@ const Music = () => {
     }
 
     const handleStart = () => {
-        console.log("视频开始播放")
+        setPlaying(true)
     }
 
     const handlePause = () => {
@@ -45,10 +46,9 @@ const Music = () => {
     }
 
     const handleEnded = () => {
-        console.log("视频播放结束")
+        nextSong()
     }
     const handleProgress = (e) => {
-        console.log(e)
         getCurrentLyric(e.playedSeconds)
     }
     const nextSong = () => {
@@ -150,8 +150,8 @@ const Music = () => {
                             height={'auto'}
                             config={reactPlayerStyle}
                             url={MusicList[musicId].url}
-                            playing={false}
-                            loop={true}
+                            playing={playing}
+                            loop={false}
                             controls={true}
                             volume={0.5}
                             onReady={handleReady}

@@ -5,7 +5,11 @@ export const MusicList = [
         singer: '张学友',
         cover: 'https://raw.githubusercontent.com/Shurlormes/Resource/master/Image/mm.jpg',
         url: 'https://raw.githubusercontent.com/Shurlormes/Resource/master/Music/mm.mp3',
-        lyric: '[00:29.51]心慢慢疼慢慢冷\n' +
+        lyric: '[00:00.61]张学友 - 慢慢\n' +
+            '[00:02.73]词：潘源良\n' +
+            '[00:02.90]曲：谷村新司\n' +
+            '[00:03.13]编曲：卢东尼\n' +
+            '[00:29.51]心慢慢疼慢慢冷\n' +
             '[00:34.55]慢慢等不到爱人\n' +
             '[00:39.72]付出一生收回几成\n' +
             '[00:47.66]情 不能分不能恨\n' +
