@@ -12,6 +12,7 @@ import {
     FormOutlined,
     VideoCameraAddOutlined,
     RedditCircleFilled,
+    ForwardOutlined,
     InstagramOutlined
 } from '@ant-design/icons'
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
@@ -57,6 +58,11 @@ const CMSLayout = () => {
             key: '/',
             icon: <RedditCircleFilled/>,
             label: (<Link to='/'>ChatGPT</Link>),
+        },
+        {
+            key: '/music',
+            icon: <ForwardOutlined/>,
+            label: (<Link to='/music'>music</Link>)
         },
         {
             key: '/antddemo',

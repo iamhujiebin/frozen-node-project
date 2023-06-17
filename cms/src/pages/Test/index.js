@@ -3,7 +3,6 @@ import {getToken} from "@/utils";
 import {createWebSocket} from "@/components/WebSocket";
 import {PubSub} from 'pubsub-js';
 import ReactPlayer from "react-player";
-import music from "@/assets/1.mp3"
 
 function Test() {
     const [message, setMessage] = useState("todo")
@@ -45,19 +44,6 @@ function Test() {
                 <ReactPlayer
                     // url="https://www.youtube.com/watch?v=dM_zrOuN1FY"
                     url="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4"
-                    playing={true}
-                    loop={true}
-                    controls={true}
-                    volume={0.5}
-                    onReady={handleReady}
-                    onStart={handleStart}
-                    onPause={handlePause}
-                    onEnded={handleEnded}
-                />
-            </div>
-            <div>
-                <ReactPlayer
-                    url={music}
                     playing={true}
                     loop={true}
                     controls={true}

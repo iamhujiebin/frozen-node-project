@@ -15,6 +15,7 @@ import ChatGPT from "@/pages/ChatGPT";
 import {lazy, Suspense} from 'react'
 import Test from "@/pages/Test";
 import Album from "@/pages/Album";
+import Music from "@/pages/Music";
 
 const Detail = lazy(() => import("@/pages/Detail"))
 const Login = lazy(() => import('@/pages/Login'))
@@ -46,6 +47,7 @@ function App() {
                         <Route path='camera' element={<Camera/>}/>
                         <Route path='album' element={<Album/>}/>
                         <Route path='antddemo' element={<AntdDemo/>}/>
+                        <Route path='music' element={<Music/>}/>
                     </Route>
                     <Route path='/login' element={<Login/>}/>
                     <Route path='/detail' element={<Detail/>}/>
