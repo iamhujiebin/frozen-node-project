@@ -1,8 +1,9 @@
-import {Row, Col, Button, Drawer} from 'antd';
+import {Row, Col, Button, Drawer, message} from 'antd';
 import ReactPlayer from "react-player";
-import {MusicList} from "./musicList";
+// import {MusicList} from "./musicList";
 import "./index.scss"
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {http} from "@/utils";
 
 const audioStyle = {
     margin: "10px",
@@ -21,11 +22,23 @@ const reactPlayerStyle = {
 
 const Music = () => {
     const [musicId, setMusicId] = useState(0)
-    const lyric = MusicList[musicId].lyric
+    // const lyric = MusicList[musicId].lyric
+    const [lyric, setLyric] = useState('')
+    const [musicList, setMusicList] = useState([{"name": "你好", "artist": "Frozen", "cover": ""}])
     const [currentLyric, setCurrentLyric] = useState([])
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
     const [open, setOpen] = useState(false);
     const [playing, setPlaying] = useState(false)
+    useEffect(() => {
+        http.get("/music/list").then(r => {
+            const list = r.data ? r.data : []
+            setMusicList(list)
+            if (list.length > 0) {
+                setLyric(list[0].lrc)
+                setMusicId(0) // todo musicId 需要优化
+            }
+        }).catch(e => message.error("fail").then())
+    }, [])
     const showDrawer = () => {
         setOpen(true);
     };
@@ -33,7 +46,7 @@ const Music = () => {
         setOpen(false);
     };
     const handleReady = () => {
-        console.log("视频准备就绪")
+        // console.log("视频准备就绪")
     }
 
     const handleStart = () => {
@@ -53,7 +66,7 @@ const Music = () => {
     }
     const nextSong = () => {
         let nextId = musicId + 1
-        if (nextId >= MusicList.length) {
+        if (nextId >= musicList.length) {
             nextId = 0
         }
         setMusicId(nextId)
@@ -61,7 +74,7 @@ const Music = () => {
     const previousSong = () => {
         let nextId = musicId - 1
         if (nextId < 0) {
-            nextId = MusicList.length - 1
+            nextId = musicList.length - 1
         }
         setMusicId(nextId)
     }
@@ -118,9 +131,9 @@ const Music = () => {
         <>
             <Drawer title="音乐清单" placement="right" onClose={onClose} open={open}>
                 {
-                    MusicList.map((item, index) => (
+                    musicList.map((item, index) => (
                         <p className={'pick'} key={index}
-                           onClick={() => chooseSong(item.id)}>{item.title}</p>
+                           onClick={() => chooseSong(item.id)}>{item.name}</p>
                     ))
                 }
             </Drawer>
@@ -128,13 +141,13 @@ const Music = () => {
                 <div>
                     <Row justify='center' type='flex'>
                         <Col className='music-cover music-cover-vertical'>
-                            <img src={MusicList[musicId].cover}/>
+                            <img src={musicList[musicId].cover}/>
                         </Col>
                     </Row>
                     <Row justify='center' type='flex' className='text-center'>
                         <Col className='music-info music-info-vertical'>
-                            <h1>{MusicList[musicId].title}</h1>
-                            <h2>{MusicList[musicId].singer}</h2>
+                            <h1>{musicList[musicId].name ? musicList[musicId].name : ""}</h1>
+                            <h2>{musicList[musicId].artist ? musicList[musicId].artist : ""}</h2>
                         </Col>
                     </Row>
                     {currentLyric.map((item, index) => (
@@ -149,7 +162,7 @@ const Music = () => {
                         <ReactPlayer
                             height={'auto'}
                             config={reactPlayerStyle}
-                            url={MusicList[musicId].url}
+                            url={musicList[musicId].url ? musicList[musicId].url : ""}
                             playing={playing}
                             loop={false}
                             controls={true}
