@@ -22,26 +22,10 @@ const reactPlayerStyle = {
     }
 };
 
-const data = [
-    {
-        title: 'Ant Design Title 1',
-    },
-    {
-        title: 'Ant Design Title 2',
-    },
-    {
-        title: 'Ant Design Title 3',
-    },
-    {
-        title: 'Ant Design Title 4',
-    },
-];
-
 const Music = () => {
     const [musicIdx, setMusicIdx] = useState(0)
     // const lyric = MusicList[musicId].lyric
-    const [lyric, setLyric] = useState('')
-    const [musicList, setMusicList] = useState([{"name": "你好", "artist": "Frozen", "cover": ""}])
+    const [musicList, setMusicList] = useState([{"name": "你好", "artist": "Frozen", "cover": "","lyric":""}])
     const [currentLyric, setCurrentLyric] = useState([])
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
     const [open, setOpen] = useState(false);
@@ -53,11 +37,16 @@ const Music = () => {
             const list = r.data ? r.data : []
             setMusicList(list)
             if (list.length > 0) {
-                setLyric(list[0].lrc)
                 setMusicIdx(0)
             }
         }).catch(e => message.error("fail").then())
     }, [])
+    const fetchMusicList = () => {
+        http.get("/music/list").then(r => {
+            const list = r.data ? r.data : []
+            setMusicList(list)
+        }).catch(e => message.error("fail").then())
+    }
     const showDrawer = () => {
         setOpen(true);
     };
@@ -106,6 +95,7 @@ const Music = () => {
     const chooseSong = (id) => {
         setMusicIdx(id)
         setOpen(false)
+        setPlaying(true)
     }
     const formatTime = (value) => {
         const minArray = value.toString().split(':');
@@ -118,7 +108,7 @@ const Music = () => {
         }
     }
     const getCurrentLyric = (currentTime) => {
-        const lyricsArray = lyric.split('\n').map(i => i.replace('[', '').split(']'));
+        const lyricsArray = musicList[musicIdx].lyric.split('\n').map(i => i.replace('[', '').split(']'));
         const lyricsMap = new Map(lyricsArray);
         const lyricsTimeArray = Array.from(lyricsMap.keys());
         let matchedTimeIndexArray = [];
@@ -160,6 +150,13 @@ const Music = () => {
             setSearchData(list)
         }).catch(e => message.error("fail").then())
     }
+    const downMusic = (id) => {
+        http.get(`/music/down?id=${id}`).then(r => {
+            fetchMusicList()
+            setOpen1(false)
+            setOpen(true)
+        }).catch(e => message.error("fail").then())
+    }
     return (
         <>
             <Drawer title="音乐清单" placement="right" onClose={onClose} open={open}>
@@ -184,10 +181,10 @@ const Music = () => {
                     renderItem={(item, index) => (
                         <List.Item>
                             <List.Item.Meta
-                                avatar={<Avatar
-                                    src={item.cover}/>}
-                                title={<a href="https://ant.design">{item.name}</a>}
-                                description={}
+                                // avatar={<Avatar
+                                //     src={item.cover}/>}
+                                title={<a onClick={()=>downMusic(item.id)}>{item.name}</a>}
+                                description={`歌手:${item.artist} 时长:${item.duration}`}
                             />
                         </List.Item>
                     )}
