@@ -1,9 +1,11 @@
-import {Row, Col, Button, Drawer, message} from 'antd';
+import {Row, Col, Button, Drawer, message, Input, Avatar, List} from 'antd';
 import ReactPlayer from "react-player";
 // import {MusicList} from "./musicList";
 import "./index.scss"
 import {useEffect, useState} from "react";
 import {http} from "@/utils";
+
+const {Search} = Input
 
 const audioStyle = {
     margin: "10px",
@@ -20,6 +22,21 @@ const reactPlayerStyle = {
     }
 };
 
+const data = [
+    {
+        title: 'Ant Design Title 1',
+    },
+    {
+        title: 'Ant Design Title 2',
+    },
+    {
+        title: 'Ant Design Title 3',
+    },
+    {
+        title: 'Ant Design Title 4',
+    },
+];
+
 const Music = () => {
     const [musicIdx, setMusicIdx] = useState(0)
     // const lyric = MusicList[musicId].lyric
@@ -28,7 +45,9 @@ const Music = () => {
     const [currentLyric, setCurrentLyric] = useState([])
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [playing, setPlaying] = useState(false)
+    const [searchData, setSearchData] = useState([])
     useEffect(() => {
         http.get("/music/list").then(r => {
             const list = r.data ? r.data : []
@@ -44,6 +63,12 @@ const Music = () => {
     };
     const onClose = () => {
         setOpen(false);
+    };
+    const showDrawer1 = () => {
+        setOpen1(true);
+    };
+    const onClose1 = () => {
+        setOpen1(false);
     };
     const handleReady = () => {
         // console.log("视频准备就绪")
@@ -129,6 +154,12 @@ const Music = () => {
         setCurrentLyric(currentLyrics)
         setMatchTimeIndex(matchedTimeIndexArray)
     }
+    const onSearch = (value) => {
+        http.get(`/music/search?q=${value}`).then(r => {
+            const list = r.data ? r.data : []
+            setSearchData(list)
+        }).catch(e => message.error("fail").then())
+    }
     return (
         <>
             <Drawer title="音乐清单" placement="right" onClose={onClose} open={open}>
@@ -138,6 +169,29 @@ const Music = () => {
                            onClick={() => chooseSong(index)}>{item.name}</p>
                     ))
                 }
+            </Drawer>
+            <Drawer title="音乐搜索" placement="right" onClose={onClose1} open={open1}>
+                <Search
+                    placeholder="input search text"
+                    onSearch={onSearch}
+                    style={{
+                        width: "100%",
+                    }}
+                />
+                <List
+                    itemLayout="horizontal"
+                    dataSource={searchData}
+                    renderItem={(item, index) => (
+                        <List.Item>
+                            <List.Item.Meta
+                                avatar={<Avatar
+                                    src={item.cover}/>}
+                                title={<a href="https://ant.design">{item.name}</a>}
+                                description={}
+                            />
+                        </List.Item>
+                    )}
+                />
             </Drawer>
             <div className='show-component'>
                 <div>
@@ -180,6 +234,7 @@ const Music = () => {
                         <Button onClick={previousSong}>上一首</Button>
                         <Button onClick={nextSong}>下一首</Button>
                         <Button onClick={showDrawer}>选歌</Button>
+                        <Button onClick={showDrawer1}>搜歌</Button>
                     </Row>
                 </div>
             </div>
