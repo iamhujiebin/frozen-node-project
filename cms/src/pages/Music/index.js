@@ -21,7 +21,7 @@ const reactPlayerStyle = {
 };
 
 const Music = () => {
-    const [musicId, setMusicId] = useState(0)
+    const [musicIdx, setMusicIdx] = useState(0)
     // const lyric = MusicList[musicId].lyric
     const [lyric, setLyric] = useState('')
     const [musicList, setMusicList] = useState([{"name": "你好", "artist": "Frozen", "cover": ""}])
@@ -35,7 +35,7 @@ const Music = () => {
             setMusicList(list)
             if (list.length > 0) {
                 setLyric(list[0].lrc)
-                setMusicId(0) // todo musicId 需要优化
+                setMusicIdx(0)
             }
         }).catch(e => message.error("fail").then())
     }, [])
@@ -65,30 +65,32 @@ const Music = () => {
         getCurrentLyric(e.playedSeconds)
     }
     const nextSong = () => {
-        let nextId = musicId + 1
+        let nextId = musicIdx + 1
         if (nextId >= musicList.length) {
             nextId = 0
         }
-        setMusicId(nextId)
+        setMusicIdx(nextId)
     }
     const previousSong = () => {
-        let nextId = musicId - 1
+        let nextId = musicIdx - 1
         if (nextId < 0) {
             nextId = musicList.length - 1
         }
-        setMusicId(nextId)
+        setMusicIdx(nextId)
     }
     const chooseSong = (id) => {
-        setMusicId(id)
+        setMusicIdx(id)
         setOpen(false)
     }
     const formatTime = (value) => {
         const minArray = value.toString().split(':');
         const min = minArray[0];
-        const secArray = minArray[1].split('.');
-        const sec = secArray[0];
-        const mill = secArray[1];
-        return Number(min * 60) + Number(sec) + Number(mill / 100);
+        if (minArray.length > 1) {
+            const secArray = minArray[1].split('.');
+            const sec = secArray[0];
+            const mill = secArray[1];
+            return Number(min * 60) + Number(sec) + Number(mill / 100);
+        }
     }
     const getCurrentLyric = (currentTime) => {
         const lyricsArray = lyric.split('\n').map(i => i.replace('[', '').split(']'));
@@ -133,7 +135,7 @@ const Music = () => {
                 {
                     musicList.map((item, index) => (
                         <p className={'pick'} key={index}
-                           onClick={() => chooseSong(item.id)}>{item.name}</p>
+                           onClick={() => chooseSong(index)}>{item.name}</p>
                     ))
                 }
             </Drawer>
@@ -141,13 +143,13 @@ const Music = () => {
                 <div>
                     <Row justify='center' type='flex'>
                         <Col className='music-cover music-cover-vertical'>
-                            <img src={musicList[musicId].cover}/>
+                            <img src={musicList[musicIdx].cover}/>
                         </Col>
                     </Row>
                     <Row justify='center' type='flex' className='text-center'>
                         <Col className='music-info music-info-vertical'>
-                            <h1>{musicList[musicId].name ? musicList[musicId].name : ""}</h1>
-                            <h2>{musicList[musicId].artist ? musicList[musicId].artist : ""}</h2>
+                            <h1>{musicList[musicIdx].name}</h1>
+                            <h2>{musicList[musicIdx].artist}</h2>
                         </Col>
                     </Row>
                     {currentLyric.map((item, index) => (
@@ -162,7 +164,7 @@ const Music = () => {
                         <ReactPlayer
                             height={'auto'}
                             config={reactPlayerStyle}
-                            url={musicList[musicId].url ? musicList[musicId].url : ""}
+                            url={musicList[musicIdx].url}
                             playing={playing}
                             loop={false}
                             controls={true}

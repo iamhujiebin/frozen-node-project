@@ -25,7 +25,7 @@ const ChatGPT = () => {
     }, [])
     let messageSocket = null
     useEffect(() => {
-        console.log("listening to message")
+        // console.log("listening to message")
         //订阅 'message' 发布的发布的消息
         if (!messageSocket) {
             messageSocket = PubSub.subscribe('message', function (topic, message) {
