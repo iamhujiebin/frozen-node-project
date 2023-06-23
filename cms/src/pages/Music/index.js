@@ -92,6 +92,10 @@ const Music = () => {
     const handleEnded = () => {
         nextSong()
     }
+    const handleError = (e) => {
+        message.error(`${musicList[musicIdx].name}无法加载`).then()
+        nextSong()
+    }
     const handleProgress = (e) => {
         getCurrentLyric(e.playedSeconds)
     }
@@ -297,11 +301,12 @@ const Music = () => {
                             playing={playing}
                             loop={false}
                             controls={true}
-                            volume={0.5}
+                            volume={1}
                             onReady={handleReady}
                             onStart={handleStart}
                             onPause={handlePause}
                             onEnded={handleEnded}
+                            onError={handleError}
                             onProgress={(e) => handleProgress(e)}
                         />
                     </Row>
