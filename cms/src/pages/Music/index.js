@@ -1,4 +1,4 @@
-import {Row, Col, Button, Drawer, message, Input, Avatar, List} from 'antd';
+import {Row, Col, Button, Drawer, message, Input, Avatar, List,Radio} from 'antd';
 import ReactPlayer from "react-player";
 // import {MusicList} from "./musicList";
 import "./index.scss"
@@ -30,34 +30,51 @@ const Music = () => {
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
+    const [open2, setOpen2] = useState(false);
     const [playing, setPlaying] = useState(false)
     const [searchData, setSearchData] = useState([])
+    const [searchListData, setSearchListData] = useState([])
+    const [playlistId,setPlaylistId] = useState(0)
+    const [playlist,setPlaylist] = useState([])
     useEffect(() => {
-        http.get("/music/list").then(r => {
+        http.get(`/music/list?playlistId=${playlistId}`).then(r => {
             const list = r.data ? r.data : []
             setMusicList(list)
             if (list.length > 0) {
                 setMusicIdx(0)
             }
         }).catch(e => message.error("fail").then())
-    }, [])
+    }, [playlistId])
     const fetchMusicList = () => {
         http.get("/music/list").then(r => {
             const list = r.data ? r.data : []
             setMusicList(list)
         }).catch(e => message.error("fail").then())
     }
+    const fetchPlayList = () => {
+        http.get("/music/author/list").then(r => {
+            const list = r.data ? r.data : []
+            setPlaylist(list)
+        }).catch(e => message.error("fail").then())
+    }
     const showDrawer = () => {
-        setOpen(true);
+        fetchPlayList()
+        setOpen(true)
     };
     const onClose = () => {
-        setOpen(false);
+        setOpen(false)
     };
     const showDrawer1 = () => {
-        setOpen1(true);
+        setOpen1(true)
     };
     const onClose1 = () => {
-        setOpen1(false);
+        setOpen1(false)
+    };
+    const showDrawer2 = () => {
+        setOpen2(true)
+    };
+    const onClose2 = () => {
+        setOpen2(false)
     };
     const handleReady = () => {
         // console.log("视频准备就绪")
@@ -150,6 +167,13 @@ const Music = () => {
             setSearchData(list)
         }).catch(e => message.error("fail").then())
     }
+    const onSearchList = (value) => {
+        http.get(`/music/author/search?q=${value}`).then(r => {
+            const list = r.data ? r.data : []
+            setSearchListData(list)
+            showDrawer()
+        }).catch(e => message.error("fail").then())
+    }
     const downMusic = (id) => {
         http.get(`/music/down?id=${id}`).then(r => {
             fetchMusicList()
@@ -157,15 +181,46 @@ const Music = () => {
             setOpen(true)
         }).catch(e => message.error("fail").then())
     }
+    const downMusicList = (id,name,desc,pic) =>{
+        http.post(`/music/author/down`,{id:id,name:name,desc:desc,pic:pic}).then(r => {
+            setOpen2(false)
+            showDrawer()
+        }).catch(e => message.error("fail").then())
+    }
     return (
         <>
             <Drawer title="音乐清单" placement="right" onClose={onClose} open={open}>
-                {
-                    musicList.map((item, index) => (
-                        <p className={'pick'} key={index}
-                           onClick={() => chooseSong(index)}>{item.name}</p>
-                    ))
-                }
+                <Radio.Group
+                    optionType="button"
+                    value={playlistId}
+                    onChange={(e) => {
+                        setPlaylistId(e.target.value);
+                    }}
+                >
+                    {playlist.map((item) => (
+                        <Radio.Button key={item.id} value={item.id}>
+                            {item.name}
+                        </Radio.Button>
+                    ))}
+                </Radio.Group>
+                {/*{*/}
+                {/*    musicList.map((item, index) => (*/}
+                {/*        <p className={'pick'} key={index}*/}
+                {/*           onClick={() => chooseSong(index)}>{item.name}</p>*/}
+                {/*    ))*/}
+                {/*}*/}
+                <List
+                    itemLayout="horizontal"
+                    dataSource={musicList}
+                    renderItem={(item, index) => (
+                        <List.Item>
+                            <List.Item.Meta
+                                title={<a onClick={()=>chooseSong(index)}>{item.name}</a>}
+                                description={`歌手:${item.artist}`}
+                            />
+                        </List.Item>
+                    )}
+                />
             </Drawer>
             <Drawer title="音乐搜索" placement="right" onClose={onClose1} open={open1}>
                 <Search
@@ -185,6 +240,29 @@ const Music = () => {
                                 //     src={item.cover}/>}
                                 title={<a onClick={()=>downMusic(item.id)}>{item.name}</a>}
                                 description={`歌手:${item.artist} 时长:${item.duration}`}
+                            />
+                        </List.Item>
+                    )}
+                />
+            </Drawer>
+            <Drawer title="歌单搜索" placement="right" onClose={onClose2} open={open2}>
+                <Search
+                    placeholder="input search text"
+                    onSearch={onSearchList}
+                    style={{
+                        width: "100%",
+                    }}
+                />
+                <List
+                    itemLayout="horizontal"
+                    dataSource={searchListData}
+                    renderItem={(item, index) => (
+                        <List.Item>
+                            <List.Item.Meta
+                                avatar={<Avatar
+                                    src={item.pic}/>}
+                                title={<a onClick={()=>downMusicList(item.id,item.name,item.desc,item.pic)}>{item.name}</a>}
+                                description={`${item.desc}`}
                             />
                         </List.Item>
                     )}
@@ -232,6 +310,7 @@ const Music = () => {
                         <Button onClick={nextSong}>下一首</Button>
                         <Button onClick={showDrawer}>选歌</Button>
                         <Button onClick={showDrawer1}>搜歌</Button>
+                        <Button onClick={showDrawer2}>搜歌手</Button>
                     </Row>
                 </div>
             </div>

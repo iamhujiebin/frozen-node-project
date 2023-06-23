@@ -24,26 +24,26 @@ const {Header, Sider} = Layout
 
 const CMSLayout = () => {
     const MenuList = [
-        {
-            key: '/home',
-            label: (<Link to='/home'>数据概览</Link>),
-            icon: <HomeOutlined/>
-        },
-        {
-            key: '/article',
-            label: (<Link to='/article'>内容管理</Link>),
-            icon: <DiffOutlined/>
-        },
-        {
-            key: '/publish',
-            icon: <EditOutlined/>,
-            label: (<Link to='/publish'>发布文章</Link>),
-        },
-        {
-            key: '/todo',
-            icon: <FormOutlined/>,
-            label: (<Link to='/todo'>todolist</Link>),
-        },
+        // {
+        //     key: '/home',
+        //     label: (<Link to='/home'>数据概览</Link>),
+        //     icon: <HomeOutlined/>
+        // },
+        // {
+        //     key: '/article',
+        //     label: (<Link to='/article'>内容管理</Link>),
+        //     icon: <DiffOutlined/>
+        // },
+        // {
+        //     key: '/publish',
+        //     icon: <EditOutlined/>,
+        //     label: (<Link to='/publish'>发布文章</Link>),
+        // },
+        // {
+        //     key: '/todo',
+        //     icon: <FormOutlined/>,
+        //     label: (<Link to='/todo'>todolist</Link>),
+        // },
         {
             key: '/camera',
             icon: <VideoCameraAddOutlined/>,
@@ -64,11 +64,11 @@ const CMSLayout = () => {
             icon: <ForwardOutlined/>,
             label: (<Link to='/music'>音乐馆</Link>)
         },
-        {
-            key: '/antddemo',
-            icon: <FormOutlined/>,
-            label: (<Link to='/antddemo'>antddemo</Link>)
-        }
+        // {
+        //     key: '/antddemo',
+        //     icon: <FormOutlined/>,
+        //     label: (<Link to='/antddemo'>antddemo</Link>)
+        // }
     ]
     let siderWidth = 200
     let initCollapsed = false
