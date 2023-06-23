@@ -178,7 +178,7 @@ const Music = () => {
         http.get(`/music/down?id=${id}`).then(r => {
             fetchMusicList()
             setOpen1(false)
-            setOpen(true)
+            setPlaying(true)
         }).catch(e => message.error("fail").then())
     }
     const downMusicList = (id,name,desc,pic) =>{
