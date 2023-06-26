@@ -1,4 +1,4 @@
-import {Row, Col, Button, Drawer, message, Input, Avatar, List,Radio} from 'antd';
+import {Row, Col, Button, Drawer, message, Input, Avatar, List, Radio} from 'antd';
 import ReactPlayer from "react-player";
 // import {MusicList} from "./musicList";
 import "./index.scss"
@@ -25,7 +25,7 @@ const reactPlayerStyle = {
 const Music = () => {
     const [musicIdx, setMusicIdx] = useState(0)
     // const lyric = MusicList[musicId].lyric
-    const [musicList, setMusicList] = useState([{"name": "你好", "artist": "Frozen", "cover": "","lyric":""}])
+    const [musicList, setMusicList] = useState([{"name": "你好", "artist": "Frozen", "cover": "", "lyric": ""}])
     const [currentLyric, setCurrentLyric] = useState([])
     const [matchedTimeIndex, setMatchTimeIndex] = useState([])
     const [open, setOpen] = useState(false);
@@ -34,8 +34,8 @@ const Music = () => {
     const [playing, setPlaying] = useState(false)
     const [searchData, setSearchData] = useState([])
     const [searchListData, setSearchListData] = useState([])
-    const [playlistId,setPlaylistId] = useState(0)
-    const [playlist,setPlaylist] = useState([])
+    const [playlistId, setPlaylistId] = useState(0)
+    const [playlist, setPlaylist] = useState([])
     useEffect(() => {
         http.get(`/music/list?playlistId=${playlistId}`).then(r => {
             const list = r.data ? r.data : []
@@ -146,9 +146,10 @@ const Music = () => {
             matchedTimeIndexArray = [0, 1, 2];
         }
 
-        let nextLyric = '';
-        if (matchedTimeIndexArray.length < lyricsTimeArray.length) {
-            nextLyric = lyricsMap.get(lyricsTimeArray[matchedTimeIndexArray[matchedTimeIndexArray.length - 1] + 1]);
+        let nextLyric = [];
+        if (matchedTimeIndexArray.length < lyricsTimeArray.length - 1) {
+            nextLyric.push(lyricsMap.get(lyricsTimeArray[matchedTimeIndexArray[matchedTimeIndexArray.length - 1] + 1]))
+            nextLyric.push(lyricsMap.get(lyricsTimeArray[matchedTimeIndexArray[matchedTimeIndexArray.length - 1] + 2]))
         }
 
         if (matchedTimeIndexArray.length > 3) {
@@ -159,8 +160,8 @@ const Music = () => {
         for (let index of matchedTimeIndexArray) {
             currentLyrics.push(lyricsMap.get(lyricsTimeArray[index]));
         }
-        if (nextLyric) {
-            currentLyrics.push(nextLyric);
+        if (nextLyric.length > 0) {
+            currentLyrics.push(...nextLyric);
         }
         setCurrentLyric(currentLyrics)
         setMatchTimeIndex(matchedTimeIndexArray)
@@ -185,8 +186,8 @@ const Music = () => {
             setPlaying(true)
         }).catch(e => message.error("fail").then())
     }
-    const downMusicList = (id,name,desc,pic) =>{
-        http.post(`/music/author/down`,{id:id,name:name,desc:desc,pic:pic}).then(r => {
+    const downMusicList = (id, name, desc, pic) => {
+        http.post(`/music/author/down`, {id: id, name: name, desc: desc, pic: pic}).then(r => {
             setOpen2(false)
             showDrawer()
         }).catch(e => message.error("fail").then())
@@ -219,7 +220,7 @@ const Music = () => {
                     renderItem={(item, index) => (
                         <List.Item>
                             <List.Item.Meta
-                                title={<a onClick={()=>chooseSong(index)}>{item.name}</a>}
+                                title={<a onClick={() => chooseSong(index)}>{item.name}</a>}
                                 description={`歌手:${item.artist}`}
                             />
                         </List.Item>
@@ -242,7 +243,7 @@ const Music = () => {
                             <List.Item.Meta
                                 // avatar={<Avatar
                                 //     src={item.cover}/>}
-                                title={<a onClick={()=>downMusic(item.id)}>{item.name}</a>}
+                                title={<a onClick={() => downMusic(item.id)}>{item.name}</a>}
                                 description={`歌手:${item.artist} 时长:${item.duration}`}
                             />
                         </List.Item>
@@ -265,7 +266,8 @@ const Music = () => {
                             <List.Item.Meta
                                 avatar={<Avatar
                                     src={item.pic}/>}
-                                title={<a onClick={()=>downMusicList(item.id,item.name,item.desc,item.pic)}>{item.name}</a>}
+                                title={<a
+                                    onClick={() => downMusicList(item.id, item.name, item.desc, item.pic)}>{item.name}</a>}
                                 description={`${item.desc}`}
                             />
                         </List.Item>
