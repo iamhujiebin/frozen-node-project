@@ -13,42 +13,43 @@ const ChatGPT = () => {
     const [msg, setMsg] = useState('')
     const [session, setSession] = useState(0)
     const [sessionList, setSessionList] = useState([0])
-    useEffect(() => {
-        // 创建websocket
-        const access_token = getToken()
-        const url = `${process.env.REACT_APP_WS_URL}/${access_token}`
-        createWebSocket(url)
-        return () => {
-            //卸载组件
-            closeWebSocket()
-        }
-    }, [])
-    let messageSocket = null
-    useEffect(() => {
-        // console.log("listening to message")
-        //订阅 'message' 发布的发布的消息
-        if (!messageSocket) {
-            messageSocket = PubSub.subscribe('message', function (topic, message) {
-                //message 为接收到的消息
-                // 重新加载消息列表
-                if (message === "NEW_MSG") {
-                    http.get("/chatgpt/session/detail/" + session).then(r => {
-                        const newList = r.data?.messages ? r.data.messages : []
-                        setList(newList)
-                    }).catch(e => message.error("fail").then())
-                }
-                if (message === "NEW_SESSION") {
-                    http.get("chatgpt/session/list").then(r => {
-                        setSessionList(r.data)
-                    }).catch(e => message.error("fail").then())
-                }
-            })
-        }
-        //卸载组件 取消订阅
-        return () => {
-            PubSub.unsubscribe(messageSocket);
-        }
-    })
+    // todo ws的功能需要后端wss支持,暂时不加
+    // useEffect(() => {
+    //     // 创建websocket
+    //     const access_token = getToken()
+    //     const url = `${process.env.REACT_APP_WS_URL}/${access_token}`
+    //     createWebSocket(url)
+    //     return () => {
+    //         //卸载组件
+    //         closeWebSocket()
+    //     }
+    // }, [])
+    // let messageSocket = null
+    // useEffect(() => {
+    //     // console.log("listening to message")
+    //     //订阅 'message' 发布的发布的消息
+    //     if (!messageSocket) {
+    //         messageSocket = PubSub.subscribe('message', function (topic, message) {
+    //             //message 为接收到的消息
+    //             // 重新加载消息列表
+    //             if (message === "NEW_MSG") {
+    //                 http.get("/chatgpt/session/detail/" + session).then(r => {
+    //                     const newList = r.data?.messages ? r.data.messages : []
+    //                     setList(newList)
+    //                 }).catch(e => message.error("fail").then())
+    //             }
+    //             if (message === "NEW_SESSION") {
+    //                 http.get("chatgpt/session/list").then(r => {
+    //                     setSessionList(r.data)
+    //                 }).catch(e => message.error("fail").then())
+    //             }
+    //         })
+    //     }
+    //     //卸载组件 取消订阅
+    //     return () => {
+    //         PubSub.unsubscribe(messageSocket);
+    //     }
+    // })
     useEffect(() => {
         document.body.style.overflow = "hidden" // 防止移动端下拉刷新。进入页面时给body添加行类样式 overflow:hidden
         return () => {

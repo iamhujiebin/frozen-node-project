@@ -37,6 +37,12 @@ const Music = () => {
     const [playlistId, setPlaylistId] = useState(0)
     const [playlist, setPlaylist] = useState([])
     useEffect(() => {
+        document.body.style.overflow = "hidden" // 防止移动端下拉刷新。进入页面时给body添加行类样式 overflow:hidden
+        return () => {
+            document.body.style.overflow = "visible" //离开页面时给body还原 overflow 为默认值
+        }
+    }, [])
+    useEffect(() => {
         http.get(`/music/list?playlistId=${playlistId}`).then(r => {
             const list = r.data ? r.data : []
             setMusicList(list)
